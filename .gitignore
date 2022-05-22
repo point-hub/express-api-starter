@@ -9,3 +9,6 @@ dist
 # envorinment variable
 .env
 .env.**.local
+
+# test
+coverage

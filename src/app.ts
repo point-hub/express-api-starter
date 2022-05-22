@@ -1,16 +1,16 @@
 import { config } from "dotenv";
 import express, { Express, Request, Response } from "express";
 
-export default class App {
-  app: Express = express();
+export function createApp() {
+  const app: Express = express();
 
-  async init() {
-    config();
+  config();
 
-    this.app.get("/", (req: Request, res: Response) => {
-      res.send("TypeScript + Express Server");
+  app.get("/", (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "TypeScript + Express Server",
     });
+  });
 
-    return this.app;
-  }
+  return app;
 }

@@ -1,16 +1,11 @@
-import { config } from "dotenv";
-import App from "./app.js";
+import { Server } from "./server.js";
+import { createApp } from "@src/app.js";
+import { port } from "@src/config/server.js";
 
-config();
+const server = new Server(createApp());
 
-const port = process.env.PORT || 3000;
+await server.start(port);
 
-const app = await new App().init();
+console.log(`[server]: Server is running at ${server.url}`);
 
-app
-  .listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-  })
-  .on("error", (e) => {
-    console.error(e);
-  });
+export default server;
