@@ -1,3 +1,4 @@
+import { invalidPathMiddleware, errorHandlerMiddleware } from "@point-hub/express-error-handler";
 import compression from "compression";
 import cors from "cors";
 import { json, urlencoded, Express } from "express";
@@ -28,5 +29,10 @@ export default class Middleware {
 
     // Custom Middleware
     this.app.use(customMiddleware({ msg: "Helloworld" }));
+  }
+
+  registerErrorHandler() {
+    this.app.use(invalidPathMiddleware);
+    this.app.use(errorHandlerMiddleware);
   }
 }

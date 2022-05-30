@@ -16,5 +16,7 @@ export function createApp() {
     });
   });
 
+  middleware.registerErrorHandler();
+
   return app;
 }
