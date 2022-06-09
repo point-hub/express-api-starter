@@ -5,6 +5,6 @@
     "**/*.spec.ts"
   ],
   "compilerOptions": {
-    "outDir": "build"
+    "outDir": "dist"
   }
 }
