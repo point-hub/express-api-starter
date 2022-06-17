@@ -5,8 +5,8 @@ yarn.lock
 pnpm-lock.yaml
 
 # build
-dist
 build
+build-dev
 
 # test
 coverage

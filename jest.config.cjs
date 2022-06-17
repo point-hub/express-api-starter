@@ -9,6 +9,7 @@ module.exports = {
   moduleNameMapper: {
     "^@src/(.*)\\.js$": "<rootDir>/src/$1",
     "^(\\.{1,2}/.*)\\.js$": "$1",
+    "#(.*)": "<rootDir>/node_modules/$1",
   },
   globals: {
     "ts-jest": {

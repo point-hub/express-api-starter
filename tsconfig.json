@@ -4,8 +4,8 @@
   ],
   "exclude": [
     "node_modules",
-    "dist",
     "build",
+    "build-dev",
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */

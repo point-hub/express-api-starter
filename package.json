@@ -8,8 +8,8 @@
   "scripts": {
     "dev:compile": "tsc -w --project tsconfig.dev.json",
     "dev:resolve-path": "tsc-alias -w --project tsconfig.dev.json",
-    "dev:run": "nodemon dist/index.js",
-    "dev": "rimraf dist && tsc --project tsconfig.dev.json && tsc-alias --project tsconfig.dev.json && concurrently -k npm:dev:*",
+    "dev:run": "nodemon build-dev/index.js",
+    "dev": "rimraf build-dev && tsc --project tsconfig.dev.json && tsc-alias --project tsconfig.dev.json && concurrently -k npm:dev:*",
     "build:compile": "tsc --project tsconfig.build.json",
     "build:resolve-path": "tsc-alias --project tsconfig.build.json",
     "build": "rimraf build && npm run build:compile && npm run build:resolve-path",
@@ -27,6 +27,7 @@
   "author": "Martien Dermawan Tanama <martiendt@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@point-hub/express-cli": "^0.0.1",
     "@point-hub/express-error-handler": "^0.0.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
