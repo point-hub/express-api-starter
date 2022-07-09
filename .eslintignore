@@ -6,7 +6,6 @@ pnpm-lock.yaml
 
 # build
 build
-build-dev
 
 # test
 coverage

@@ -3,15 +3,29 @@ import compression from "compression";
 import cors from "cors";
 import { json, urlencoded, Express } from "express";
 import helmet from "helmet";
-import customMiddleware from "./custom-middleware/index.js";
 
+/**
+ * The application's global middleware stack.
+ * These middleware are run during every request to your application.
+ */
 export default class Middleware {
   app: Express;
   constructor(app: Express) {
     this.app = app;
   }
 
-  private baseMiddleware() {
+  registerBeforeRoutes() {
+    /**
+     * Get Client IP
+     *
+     * 1. Edit nginx header like this "proxy_set_header X-Forwarded-For $remote_addr;"
+     * 2. Enable trust proxy on express app "app.set('trust proxy', true)"
+     * 3. Use "req.ip" to get Client IP
+     *
+     * Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+     * see https://expressjs.com/en/guide/behind-proxies.html
+     */
+    this.app.set("trust proxy", true);
     // Gzip compressing can greatly decrease the size of the response body
     this.app.use(compression());
     // Parse json request body
@@ -24,14 +38,7 @@ export default class Middleware {
     this.app.use(cors());
   }
 
-  register() {
-    this.baseMiddleware();
-
-    // Custom Middleware
-    this.app.use(customMiddleware({ msg: "Helloworld" }));
-  }
-
-  registerErrorHandler() {
+  registerAfterRoutes() {
     this.app.use(invalidPathMiddleware);
     this.app.use(errorHandlerMiddleware);
   }

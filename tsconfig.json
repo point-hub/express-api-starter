@@ -3,9 +3,9 @@
     "**/*.ts",
   ],
   "exclude": [
+    "coverage",
     "node_modules",
     "build",
-    "build-dev",
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */

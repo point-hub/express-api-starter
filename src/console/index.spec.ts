@@ -1,9 +1,12 @@
 import { ExpressCli } from "@point-hub/express-cli";
-import { commands } from "./index.js";
+import { ConsoleKernel } from "./index.js";
 
 it("express app to be defined", async () => {
-  const expressCli = new ExpressCli("cli", "1.0.0");
-  commands(expressCli);
-  expect(expressCli).toBeDefined();
-  expect(expressCli).toBeInstanceOf(ExpressCli);
+  const cli = new ExpressCli("cli", "1.0.0");
+
+  const kernel = new ConsoleKernel(cli);
+  await kernel.register();
+
+  expect(cli).toBeDefined();
+  expect(cli).toBeInstanceOf(ExpressCli);
 });

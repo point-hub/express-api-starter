@@ -1,19 +1,16 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import Middleware from "@src/middleware/index.js";
+import router from "@src/router.js";
 
-export function createApp() {
+export async function createApp() {
   const app: Express = express();
 
   const middleware = new Middleware(app);
-  middleware.register();
+  middleware.registerBeforeRoutes();
 
-  app.get("/", (req: Request, res: Response) => {
-    res.status(200).json({
-      message: "TypeScript + Express Server",
-    });
-  });
+  app.use("/v1", await router());
 
-  middleware.registerErrorHandler();
+  middleware.registerAfterRoutes();
 
   return app;
 }
