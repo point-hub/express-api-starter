@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Collection } from "mongodb";
 import { UserCreateService } from "../services/create.service.js";
 import { connection } from "@src/config/database.js";
 import MongoDbConnection from "@src/database/connection-mongodb.js";
@@ -17,8 +16,8 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     );
 
     await db.open();
-    const col = db.collection("user") as Collection;
-    console.log(await col.find().toArray());
+    // const col = db.collection("user") as Collection;
+    // console.log(await col.find().toArray());
 
     const userCreateService = new UserCreateService();
     userCreateService.handle(db);

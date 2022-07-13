@@ -5,9 +5,13 @@ import DatabaseConnection from "@src/database/connection.js";
 export class UserCreateService {
   async handle(db: DatabaseConnection) {
     const userEntity = new UserEntity({
-      username: "John",
+      username: "Tesla",
+    });
+    const userEntity2 = new UserEntity({
+      username: "Tesla",
     });
     const userRepository = new UserRepository(db);
-    userRepository.create(userEntity.user);
+    userRepository.createMany([userEntity.user, userEntity2.user]);
+    // userRepository.create(userEntity.user);
   }
 }

@@ -10,15 +10,38 @@ export interface IDatabaseAdapter {
   close(): Promise<void>;
   database(name: string): unknown;
   collection(name: string): unknown;
-  create(doc: Document): Promise<unknown>;
+  create(doc: Document, options?: unknown): Promise<IResponseCreate>;
   createMany(docs: Array<Document>): Promise<unknown>;
-  read(filter: unknown, options: unknown): Promise<unknown>;
-  readAll(filter: unknown): Promise<unknown>;
+  read(filter: unknown, options?: unknown): Promise<unknown>;
+  readAll(filter: unknown, options?: unknown): Promise<unknown>;
   update(filter: unknown, doc: Document): Promise<unknown>;
   updateMany(filter: unknown, doc: Document): Promise<unknown>;
   delete(filter: unknown): Promise<unknown>;
   deleteMany(filter: unknown): Promise<unknown>;
-  aggregate(filter: unknown): Promise<unknown>;
+  aggregate(filter: unknown, options?: unknown): Promise<unknown>;
+}
+
+export interface IResponseCreate {
+  _id: string;
+  [key: string]: unknown;
+}
+
+export interface IResponseCreateMany {
+  count: number;
+  data: Array<string>;
+}
+
+export interface IResponseRead {
+  _id: string;
+  [key: string]: unknown;
+}
+
+export interface IResponseReadAll {
+  data: Array<IResponseRead>;
+  page: number;
+  totalPerPage: number;
+  totalPage: number;
+  totalDocument: number;
 }
 
 export default class DatabaseConnection {
@@ -30,15 +53,15 @@ export default class DatabaseConnection {
     this.config = config;
   }
 
-  public url() {
+  public url(): string {
     return this.adapter.url();
   }
 
-  public async open() {
+  public async open(): Promise<void> {
     await this.adapter.open();
   }
 
-  public async close() {
+  public async close(): Promise<void> {
     await this.adapter.close();
   }
 
@@ -50,11 +73,12 @@ export default class DatabaseConnection {
     return this.adapter.collection(name);
   }
 
-  public create(doc: Document): Promise<unknown> {
+  public create(doc: Document): Promise<IResponseCreate> {
     return this.adapter.create(doc);
   }
 
   public async createMany(docs: Array<Document>): Promise<unknown> {
+    console.log(docs);
     return await this.adapter.createMany(docs);
   }
 

@@ -15,7 +15,20 @@ export class UserRepository {
   }
 
   async createMany(users: Array<Partial<IUser>>) {
-    await this.collection.insertMany(users);
+    const b = [
+      {
+        username: "aaa",
+      },
+      {
+        username: "aaa",
+      },
+    ];
+    console.log(users);
+    console.log(b);
+    const a = await this.collection.insertMany(users);
+    console.log("bbbb ");
+    console.log(a);
+    console.log("ccc ");
   }
 
   async readAll(filter: Filter<Document>) {
