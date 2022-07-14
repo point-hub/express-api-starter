@@ -4,9 +4,8 @@ import { connection } from "@src/config/database.js";
 
 export const db = new DatabaseConnection(
   new MongoDbConnection({
-    name: "starter",
-    protocol: "mongodb",
-    host: "localhost:27017",
-  }),
-  connection
+    name: connection[connection.default].name,
+    protocol: connection[connection.default].protocol,
+    host: connection[connection.default].host,
+  })
 );

@@ -5,20 +5,22 @@ export interface Document {
 }
 
 export interface IDatabaseAdapter {
-  url(): string;
+  _database: unknown;
+  url(): this;
   open(): Promise<void>;
   close(): Promise<void>;
-  database(name: string): unknown;
-  collection(name: string): unknown;
+  database(name: string): this;
+  collection(name: string): this;
   create(doc: Document, options?: unknown): Promise<IResponseCreate>;
-  createMany(docs: Array<Document>): Promise<unknown>;
-  read(filter: unknown, options?: unknown): Promise<unknown>;
-  readAll(filter: unknown, options?: unknown): Promise<unknown>;
-  update(filter: unknown, doc: Document): Promise<unknown>;
-  updateMany(filter: unknown, doc: Document): Promise<unknown>;
-  delete(filter: unknown): Promise<unknown>;
-  deleteMany(filter: unknown): Promise<unknown>;
-  aggregate(filter: unknown, options?: unknown): Promise<unknown>;
+  veve(): string;
+  // createMany(docs: Array<Document>): Promise<unknown>;
+  // read(filter: unknown, options?: unknown): Promise<unknown>;
+  // readAll(filter: unknown, options?: unknown): Promise<unknown>;
+  // update(filter: unknown, doc: Document): Promise<unknown>;
+  // updateMany(filter: unknown, doc: Document): Promise<unknown>;
+  // delete(filter: unknown): Promise<unknown>;
+  // deleteMany(filter: unknown): Promise<unknown>;
+  // aggregate(filter: unknown, options?: unknown): Promise<unknown>;
 }
 
 export interface IResponseCreate {
@@ -45,15 +47,13 @@ export interface IResponseReadAll {
 }
 
 export default class DatabaseConnection {
-  private config: IDatabaseConfig;
   private adapter: IDatabaseAdapter;
 
-  constructor(adapter: IDatabaseAdapter, config: IDatabaseConfig) {
+  constructor(adapter: IDatabaseAdapter) {
     this.adapter = adapter;
-    this.config = config;
   }
 
-  public url(): string {
+  public url(): IDatabaseAdapter {
     return this.adapter.url();
   }
 
@@ -65,11 +65,11 @@ export default class DatabaseConnection {
     await this.adapter.close();
   }
 
-  public database(name: string): unknown {
+  public database(name: string): IDatabaseAdapter {
     return this.adapter.database(name);
   }
 
-  public collection(name: string): unknown {
+  public collection(name: string): IDatabaseAdapter {
     return this.adapter.collection(name);
   }
 
@@ -77,36 +77,40 @@ export default class DatabaseConnection {
     return this.adapter.create(doc);
   }
 
-  public async createMany(docs: Array<Document>): Promise<unknown> {
-    console.log(docs);
-    return await this.adapter.createMany(docs);
+  veve() {
+    return "string";
   }
 
-  public async read(filter: unknown, options: unknown): Promise<unknown> {
-    return await this.adapter.read(filter, options);
-  }
+  // public async createMany(docs: Array<Document>): Promise<unknown> {
+  //   console.log(docs);
+  //   return await this.adapter.createMany(docs);
+  // }
 
-  public async readAll(filter: unknown): Promise<unknown> {
-    return await this.adapter.readAll(filter);
-  }
+  // public async read(filter: unknown, options: unknown): Promise<unknown> {
+  //   return await this.adapter.read(filter, options);
+  // }
 
-  public async update(filter: unknown, document: Document): Promise<unknown> {
-    return await this.adapter.update(filter, document);
-  }
+  // public async readAll(filter: unknown): Promise<unknown> {
+  //   return await this.adapter.readAll(filter);
+  // }
 
-  public async updateMany(filter: unknown, document: Document): Promise<unknown> {
-    return await this.adapter.updateMany(filter, document);
-  }
+  // public async update(filter: unknown, document: Document): Promise<unknown> {
+  //   return await this.adapter.update(filter, document);
+  // }
 
-  public async delete(filter: unknown): Promise<unknown> {
-    return await this.adapter.delete(filter);
-  }
+  // public async updateMany(filter: unknown, document: Document): Promise<unknown> {
+  //   return await this.adapter.updateMany(filter, document);
+  // }
 
-  public async deleteMany(filter: unknown): Promise<unknown> {
-    return await this.adapter.deleteMany(filter);
-  }
+  // public async delete(filter: unknown): Promise<unknown> {
+  //   return await this.adapter.delete(filter);
+  // }
 
-  public async aggregate(filter: Array<Document>): Promise<unknown> {
-    return await this.adapter.aggregate(filter);
-  }
+  // public async deleteMany(filter: unknown): Promise<unknown> {
+  //   return await this.adapter.deleteMany(filter);
+  // }
+
+  // public async aggregate(filter: Array<Document>): Promise<unknown> {
+  //   return await this.adapter.aggregate(filter);
+  // }
 }

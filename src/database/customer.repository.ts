@@ -1,9 +1,9 @@
 import { BaseRepository } from "./base-repository.js";
 import DatabaseConnection, { Document, IResponseCreate } from "./connection.js";
 
-export class UserRepository extends BaseRepository {
+export class CustomerRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
-    super(db, "user");
+    super(db, "customer");
   }
 
   public async create(doc: Document): Promise<IResponseCreate> {

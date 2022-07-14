@@ -16,7 +16,7 @@ export interface IMongodbConfig {
 export interface IDatabaseConfig {
   default: string;
   mongodb: IMongodbConfig;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export const connection: IDatabaseConfig = {
