@@ -12,7 +12,6 @@ export interface IDatabaseAdapter {
   database(name: string): this;
   collection(name: string): this;
   create(doc: Document, options?: unknown): Promise<IResponseCreate>;
-  veve(): string;
   // createMany(docs: Array<Document>): Promise<unknown>;
   // read(filter: unknown, options?: unknown): Promise<unknown>;
   // readAll(filter: unknown, options?: unknown): Promise<unknown>;
@@ -66,19 +65,19 @@ export default class DatabaseConnection {
   }
 
   public database(name: string): IDatabaseAdapter {
+    console.log("db");
     return this.adapter.database(name);
   }
 
-  public collection(name: string): IDatabaseAdapter {
-    return this.adapter.collection(name);
+  public collection(name: string): this {
+    console.log("col");
+    this.adapter.collection(name);
+    return this;
   }
 
   public create(doc: Document): Promise<IResponseCreate> {
+    console.log("create");
     return this.adapter.create(doc);
-  }
-
-  veve() {
-    return "string";
   }
 
   // public async createMany(docs: Array<Document>): Promise<unknown> {

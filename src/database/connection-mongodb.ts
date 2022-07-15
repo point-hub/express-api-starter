@@ -26,11 +26,11 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   public client: MongoClient;
   public config: IDatabaseConfig;
   public _url = "";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public _database: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public _collection: any;
-  veve() {
-    return "veve mongodb";
-  }
+
   constructor(config: IDatabaseConfig) {
     const options: MongoClientOptions = {};
 
@@ -38,7 +38,6 @@ export default class MongoDbConnection implements IDatabaseAdapter {
 
     this.url();
     this.client = new MongoClient(this._url, options);
-    this.database(config.name);
   }
 
   public url(): this {
@@ -46,6 +45,10 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     return this;
   }
 
+  /**
+   * Open connection to connect the client to the server (optional starting in v4.7)
+   * https://www.mongodb.com/docs/drivers/node/v4.8/fundamentals/connection/connect/
+   */
   public async open(): Promise<void> {
     await this.client.connect();
   }

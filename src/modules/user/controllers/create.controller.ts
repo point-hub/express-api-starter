@@ -7,13 +7,12 @@ import { db } from "@src/database/database.js";
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await db.open();
     // const a = await db.collection("asd123").create({ username: "gg1" });
     // await db.database("cc").collection("asd123").create({ username: "gg2" });
-    // await db.collection("asd123").create({ username: "gg3" });
+    await db.collection("asd123").create({ username: "gg3" });
     // console.log(a);
 
-    CreateUserService.handle(db);
+    // CreateUserService.handle(db);
     // user.create({ username: "kreo" });
 
     // db.collection("user").create({ username: "tes" });
