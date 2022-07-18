@@ -12,8 +12,10 @@ import {
   DeleteOptions,
   AggregateOptions,
   ClientSession,
+  DbOptions,
+  CollectionOptions,
 } from "mongodb";
-import { IDatabaseAdapter, IResponseCreate, IResponseCreateMany } from "./connection.js";
+import { IDatabaseAdapter, IResponseCreate, IResponseCreateMany, IResponseReadAll } from "./connection.js";
 
 interface IDatabaseConfig {
   protocol: string;
@@ -54,17 +56,17 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     await this.client.close();
   }
 
-  public database(name: string): this {
-    this._database = this.client.db(name);
+  public database(name: string, options?: DbOptions): this {
+    this._database = this.client.db(name, options);
     return this;
   }
 
-  public collection(name: string): this {
+  public collection(name: string, options?: CollectionOptions): this {
     if (!this._database) {
       throw new Error("Database not found");
     }
 
-    this._collection = this._database.collection(name);
+    this._collection = this._database.collection(name, options);
     return this;
   }
 
@@ -92,11 +94,12 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   //   return await this.collection("a").findOne(filter, options ?? {});
   // }
 
-  // public async readAll(filter: Filter<Document>, options?: FindOptions): Promise<unknown> {
-  //   return await this.collection("a")
-  //     .find(filter, options ?? {})
-  //     .toArray();
-  // }
+  public async readAll(filter: Filter<Document>, options?: FindOptions): Promise<unknown> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
+    return await this._collection.find(filter, options ?? {}).toArray();
+  }
 
   // public async update(filter: Filter<Document>, document: Document, options?: UpdateOptions): Promise<unknown> {
   //   return await this.collection("a").updateOne(filter, document, options ?? {});

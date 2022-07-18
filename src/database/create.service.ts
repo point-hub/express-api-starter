@@ -4,7 +4,7 @@ import { UserRepository } from "./user.repository.js";
 import DatabaseConnection, { Document } from "@src/database/connection.js";
 
 export class CreateUserService {
-  db: DatabaseConnection;
+  private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
