@@ -11,6 +11,7 @@ import {
   UpdateOptions,
   DeleteOptions,
   AggregateOptions,
+  ClientSession,
 } from "mongodb";
 import { IDatabaseAdapter, IResponseCreate, IResponseCreateMany } from "./connection.js";
 
@@ -25,24 +26,20 @@ interface IDatabaseConfig {
 export default class MongoDbConnection implements IDatabaseAdapter {
   public client: MongoClient;
   public config: IDatabaseConfig;
-  public _url = "";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public _database: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public _collection: any;
+  public _database: Db | undefined;
+  public _collection: Collection | undefined;
+  public session: ClientSession | undefined;
 
   constructor(config: IDatabaseConfig) {
     const options: MongoClientOptions = {};
 
     this.config = config;
 
-    this.url();
-    this.client = new MongoClient(this._url, options);
+    this.client = new MongoClient(this.url(), options);
   }
 
-  public url(): this {
-    this._url = "mongodb://localhost:27017";
-    return this;
+  public url(): string {
+    return "mongodb://localhost:27017";
   }
 
   /**
@@ -63,12 +60,21 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   }
 
   public collection(name: string): this {
+    if (!this._database) {
+      throw new Error("Database not found");
+    }
+
     this._collection = this._database.collection(name);
     return this;
   }
 
   public async create(doc: Document, options?: InsertOneOptions): Promise<IResponseCreate> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
+
     const response = await this._collection.insertOne(doc, options ?? {});
+
     return {
       _id: response.insertedId.toString(),
     };
@@ -113,4 +119,29 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   //     .aggregate(filter, options ?? {})
   //     .toArray();
   // }
+
+  public startSession() {
+    this.session = this.client.startSession();
+    return this;
+  }
+
+  public async endSession(): Promise<this> {
+    await this.session?.endSession();
+    return this;
+  }
+
+  public startTransaction() {
+    this.session?.startTransaction();
+    return this;
+  }
+
+  public async commitTransaction() {
+    await this.session?.commitTransaction();
+    return this;
+  }
+
+  public async abortTransaction() {
+    await this.session?.abortTransaction();
+    return this;
+  }
 }

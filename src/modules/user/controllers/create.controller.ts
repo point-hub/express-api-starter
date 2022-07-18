@@ -7,24 +7,24 @@ import { db } from "@src/database/database.js";
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const a = await db.collection("asd123").create({ username: "gg1" });
-    // await db.database("cc").collection("asd123").create({ username: "gg2" });
-    await db.collection("asd123").create({ username: "gg3" });
-    // console.log(a);
+    const session = db.startSession();
 
-    // CreateUserService.handle(db);
-    // user.create({ username: "kreo" });
+    db.startTransaction();
 
-    // db.collection("user").create({ username: "tes" });
-    // const col = db.collection("user") as Collection;
-    // console.log(await col.find().toArray());
+    console.log(req.body);
 
-    // const userCreateService = new UserCreateService();
-    // userCreateService.handle(db);
+    const createUserService = new CreateUserService(db);
+    const result = await createUserService.handle(req.body, session);
+
+    console.log(result);
+
+    await db.commitTransaction();
 
     res.status(201).json({});
-    console.log("Hello");
   } catch (error) {
+    await db.abortTransaction();
     next(error);
+  } finally {
+    await db.endSession();
   }
 };

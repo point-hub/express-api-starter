@@ -9,7 +9,11 @@ const dbConnection = new DatabaseConnection(
     host: connection[connection.default].host,
   })
 );
-
-dbConnection.database(connection[connection.default].name);
+try {
+  await dbConnection.open();
+  dbConnection.database(connection[connection.default].name);
+} catch (error) {
+  throw error;
+}
 
 export const db = dbConnection;

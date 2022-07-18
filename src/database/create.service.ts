@@ -1,24 +1,21 @@
 import { CustomerRepository } from "./customer.repository.js";
 import { UserEntity } from "./user.entity.js";
 import { UserRepository } from "./user.repository.js";
-import DatabaseConnection from "@src/database/connection.js";
+import DatabaseConnection, { Document } from "@src/database/connection.js";
 
 export class CreateUserService {
-  public static async handle(db: DatabaseConnection) {
+  db: DatabaseConnection;
+  constructor(db: DatabaseConnection) {
+    this.db = db;
+  }
+  public async handle(doc: Document, session: unknown) {
     const userEntity = new UserEntity({
-      username: "abcde",
+      username: doc.username,
+      password: doc.password,
     });
-    const userRepository = new UserRepository(db);
-    const customer = new CustomerRepository(db);
+    userEntity.suspendUser();
 
-    userRepository.create(userEntity.user);
-    customer.create({ username: "customer1" });
-    userRepository.create({ username: "user2" });
-    userRepository.create({ username: "user3" });
-    customer.create({ username: "customer2" });
-    // const userRepository = new UserRepository(db);
-    // userRepository.createMany([userEntity.user, userEntity2.user]);
-    // userRepository.create(userEntity.user);
-    console.log("asd");
+    const userRepository = new UserRepository(this.db);
+    return await userRepository.create(userEntity.user, { session });
   }
 }

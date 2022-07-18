@@ -1,16 +1,16 @@
 export interface IUser {
   username: string;
   password: string;
-  emailValidationCode: string;
-  status: "registered" | "activated" | "suspended";
+  emailValidationCode?: string;
+  status?: "registered" | "activated" | "suspended";
 }
 
 export const restricted = ["status"];
 
 export class UserEntity {
-  public user: Partial<IUser>;
+  public user: IUser;
 
-  constructor(user: Partial<IUser>) {
+  constructor(user: IUser) {
     this.user = user;
   }
 

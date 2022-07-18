@@ -6,8 +6,8 @@ export class CustomerRepository extends BaseRepository {
     super(db, "customer");
   }
 
-  public async create(doc: Document): Promise<IResponseCreate> {
-    return await this.collection().create(doc);
+  public async create(doc: Document, options: unknown): Promise<IResponseCreate> {
+    return await this.collection().create(doc, options);
   }
 
   // public async createMany(docs: Array<Document>): Promise<unknown> {

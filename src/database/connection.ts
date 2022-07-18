@@ -1,12 +1,10 @@
-import { IDatabaseConfig } from "@src/config/database.js";
-
 export interface Document {
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export interface IDatabaseAdapter {
-  _database: unknown;
-  url(): this;
+  session: unknown;
+  url(): string;
   open(): Promise<void>;
   close(): Promise<void>;
   database(name: string): this;
@@ -20,6 +18,11 @@ export interface IDatabaseAdapter {
   // delete(filter: unknown): Promise<unknown>;
   // deleteMany(filter: unknown): Promise<unknown>;
   // aggregate(filter: unknown, options?: unknown): Promise<unknown>;
+  startSession(): this;
+  endSession(): Promise<this>;
+  startTransaction(): this;
+  commitTransaction(): Promise<this>;
+  abortTransaction(): Promise<this>;
 }
 
 export interface IResponseCreate {
@@ -52,7 +55,7 @@ export default class DatabaseConnection {
     this.adapter = adapter;
   }
 
-  public url(): IDatabaseAdapter {
+  public url(): string {
     return this.adapter.url();
   }
 
@@ -65,19 +68,16 @@ export default class DatabaseConnection {
   }
 
   public database(name: string): IDatabaseAdapter {
-    console.log("db");
     return this.adapter.database(name);
   }
 
   public collection(name: string): this {
-    console.log("col");
     this.adapter.collection(name);
     return this;
   }
 
-  public create(doc: Document): Promise<IResponseCreate> {
-    console.log("create");
-    return this.adapter.create(doc);
+  public async create(doc: Document, options?: unknown): Promise<IResponseCreate> {
+    return await this.adapter.create(doc, options);
   }
 
   // public async createMany(docs: Array<Document>): Promise<unknown> {
@@ -112,4 +112,29 @@ export default class DatabaseConnection {
   // public async aggregate(filter: Array<Document>): Promise<unknown> {
   //   return await this.adapter.aggregate(filter);
   // }
+
+  public startSession() {
+    this.adapter.startSession();
+    return this.adapter.session;
+  }
+
+  public async endSession() {
+    await this.adapter.endSession();
+    return this;
+  }
+
+  public startTransaction() {
+    this.adapter.startTransaction();
+    return this;
+  }
+
+  public async commitTransaction() {
+    await this.adapter.commitTransaction();
+    return this;
+  }
+
+  public async abortTransaction() {
+    await this.adapter.abortTransaction();
+    return this;
+  }
 }
