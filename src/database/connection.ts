@@ -1,6 +1,18 @@
+import { ObjectId } from "mongodb";
+
 export interface Document {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
+}
+
+export interface IQuery {
+  fields: string[];
+  filter: {
+    [key: string]: any;
+  };
+  page: number;
+  limit: number;
+  sort: string[];
 }
 
 export interface IDatabaseAdapter {
@@ -18,7 +30,7 @@ export interface IDatabaseAdapter {
   create(doc: Document, options?: unknown): Promise<IResponseCreate>;
   // createMany(docs: Array<Document>, options?: unknown): Promise<IResponseCreateMany>;
   // read(filter: unknown, options?: unknown): Promise<IResponseRead>;
-  readAll(filter: unknown, options?: unknown): Promise<unknown>;
+  readAll(query: IQuery, options?: unknown): Promise<unknown>;
   // update(filter: unknown, doc: Document): Promise<unknown>;
   // updateMany(filter: unknown, doc: Document): Promise<unknown>;
   // delete(filter: unknown): Promise<unknown>;
@@ -37,7 +49,7 @@ export interface IResponseCreateMany {
 }
 
 export interface IResponseRead {
-  _id: string;
+  _id?: ObjectId;
   [key: string]: unknown;
 }
 
@@ -115,8 +127,8 @@ export default class DatabaseConnection {
   //   return await this.adapter.read(filter, options);
   // }
 
-  public async readAll(filter: unknown): Promise<unknown> {
-    return await this.adapter.readAll(filter);
+  public async readAll(query: IQuery): Promise<unknown> {
+    return await this.adapter.readAll(query);
   }
 
   // public async update(filter: unknown, document: Document): Promise<unknown> {

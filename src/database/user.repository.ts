@@ -1,6 +1,6 @@
 import { Filter } from "mongodb";
 import { BaseRepository } from "./base-repository.js";
-import DatabaseConnection, { Document, IResponseCreate } from "./connection.js";
+import DatabaseConnection, { Document, IQuery, IResponseCreate } from "./connection.js";
 
 export class UserRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
@@ -19,8 +19,8 @@ export class UserRepository extends BaseRepository {
   //   return await this.collection.findOne(filter, options);
   // }
 
-  public async readAll(filter: Filter<Document>): Promise<unknown> {
-    return await this.collection().readAll(filter);
+  public async readAll(query: IQuery): Promise<unknown> {
+    return await this.collection().readAll(query);
   }
 
   // public async update(filter: Filter<Document>, document: Document): Promise<unknown> {

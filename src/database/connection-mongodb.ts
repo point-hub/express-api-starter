@@ -15,7 +15,71 @@ import {
   DbOptions,
   CollectionOptions,
 } from "mongodb";
-import { IDatabaseAdapter, IResponseCreate, IResponseCreateMany, IResponseReadAll } from "./connection.js";
+import {
+  IDatabaseAdapter,
+  IResponseCreate,
+  IResponseCreateMany,
+  IResponseRead,
+  IResponseReadAll,
+} from "./connection.js";
+
+export function sort(fields: string) {
+  if (!fields) return null;
+  const hash: any = {};
+  let c;
+  fields.split(",").forEach(function (field) {
+    c = field.charAt(0);
+    if (c === "-") field = field.substring(1);
+    hash[field.trim()] = c === "-" ? -1 : 1;
+  });
+  return hash;
+}
+
+/**
+ * Query string parse string from request to filter mongodb
+ * field selection, paging, sorting, filtering
+ * fields   => fields(fields, restrictedFields)
+ * filter   => filter(obj)
+ * skip     => skip(val)
+ * limit    => limit(val)
+ * sort     => sort(fields)
+ */
+function fields(fields = "", restrictedFields = []) {
+  const obj: any = {};
+  if (fields) {
+    /**
+     * Convert string to array
+     * ex: 'username, firstName, lastName => ['username', 'firstName', 'lastName']
+     */
+    let arrayOfFields = fields.split(",");
+    arrayOfFields = filterRestrictedFields(arrayOfFields, restrictedFields);
+
+    /**
+     * Convert array to object
+     * ex:['username', 'firstName', 'lastName'] to { username: 1, firstName: 1, lastName: 1 }
+     */
+
+    for (let i = 0; i < arrayOfFields.length; i++) {
+      obj[`${arrayOfFields[i].trim()}`] = 1;
+    }
+  }
+  /**
+   * Remove restricted fields
+   * ex: { password: 0 }
+   */
+  if (Object.keys(obj).length === 0 && obj.constructor === Object) {
+    for (let i = 0; i < restrictedFields.length; i++) {
+      obj[`${restrictedFields[i].trim()}`] = 0;
+    }
+  }
+
+  return obj;
+}
+
+// remove restricted fields from array
+function filterRestrictedFields(arrayOfFields: any, restrictedFields: any) {
+  return arrayOfFields.filter((val: any) => !restrictedFields.includes(val.trim()));
+}
 
 interface IDatabaseConfig {
   protocol: string;
@@ -94,11 +158,30 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   //   return await this.collection("a").findOne(filter, options ?? {});
   // }
 
-  public async readAll(filter: Filter<Document>, options?: FindOptions): Promise<unknown> {
+  public async readAll(query: Filter<Document>, options?: FindOptions): Promise<IResponseReadAll> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
-    return await this._collection.find(filter, options ?? {}).toArray();
+
+    const page = parseInt(query.page ?? 1);
+    const limit = parseInt(query.limit ?? 2);
+    const result = await this._collection
+      .find(query.filter ?? {}, options ?? {})
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort(sort(query.sort))
+      .project(query.project)
+      .toArray();
+
+    const totalDocument = await this._collection.countDocuments();
+
+    return {
+      data: result as Array<IResponseRead>,
+      page: page,
+      totalPerPage: limit,
+      totalPage: Math.round(totalDocument / limit),
+      totalDocument,
+    };
   }
 
   // public async update(filter: Filter<Document>, document: Document, options?: UpdateOptions): Promise<unknown> {
