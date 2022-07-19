@@ -2,27 +2,20 @@
  * Convert string param to mongodb field object
  *
  * @example
- * fields("name, address")  // => { name: 1, address: 1}
+ * fields("name, address") // => { name: 1, address: 1 }
  */
 export function fields(fields = "", restrictedFields = []) {
-  const obj: any = {};
+  let obj: any = {};
+
   if (fields) {
-    /**
-     * Convert string to array
-     * ex: 'username, firstName, lastName => ['username', 'firstName', 'lastName']
-     */
-    let arrayOfFields = fields.split(",");
-    arrayOfFields = filterRestrictedFields(arrayOfFields, restrictedFields);
+    let arrayOfFields = convertStringToArray(fields);
+    arrayOfFields = filterRestricted(arrayOfFields, restrictedFields);
 
-    /**
-     * Convert array to object
-     * ex:['username', 'firstName', 'lastName'] to { username: 1, firstName: 1, lastName: 1 }
-     */
-
-    for (let i = 0; i < arrayOfFields.length; i++) {
-      obj[`${arrayOfFields[i].trim()}`] = 1;
-    }
+    obj = {
+      ...convertArrayToObject(arrayOfFields),
+    };
   }
+
   /**
    * Remove restricted fields
    * ex: { password: 0 }
@@ -35,11 +28,63 @@ export function fields(fields = "", restrictedFields = []) {
 
   return obj;
 }
+
+/**
+ * Convert string to array
+ *
+ * @example
+ * convertStringToArray("name, address") // => ["name", "address"]
+ */
+export function convertStringToArray(fields: string) {
+  return fields
+    .split(" ")
+    .join()
+    .split(",")
+    .filter((el) => el);
+}
+
+/**
+ * Convert array to mongodb field object
+ *
+ * @example
+ * convertArrayToObject(["name", "address"]) // => { name: 1, address: 1 }
+ */
+export function convertArrayToObject(array: Array<string>) {
+  const obj: any = {};
+  for (let i = 0; i < array.length; i++) {
+    obj[`${array[i].trim()}`] = 1;
+  }
+  return obj;
+}
+
+/**
+ * Remove restricted fields from array
+ *
+ * @example
+ * filterRestricted({ name: 1, password: 1}, ["password"]) => { name: 1, password: 0 }
+ */
+export function filterRestricted(fields: any, restrictedFields: any) {
+  return fields.filter((val: any) => !restrictedFields.includes(val.trim()));
+}
+
+/**
+ * Remove restricted fields
+ *
+ * @example
+ * ex: { password: 0 }
+ */
+export function addRestricted(obj: any, restrictedFields: Array<string>) {
+  for (let i = 0; i < restrictedFields.length; i++) {
+    obj[`${restrictedFields[i]}`] = 0;
+  }
+  return obj;
+}
+
 /**
  * Convert string param to mongodb sort object
  *
  * @example
- * sort("name, -createdAt")   // => { name: 1, createdAt: -1 }
+ * sort("name, -createdAt") // => { name: 1, createdAt: -1 }
  */
 export function sort(fields: string) {
   if (!fields) return null;
@@ -51,9 +96,4 @@ export function sort(fields: string) {
     hash[field.trim()] = c === "-" ? -1 : 1;
   });
   return hash;
-}
-
-// remove restricted fields from array
-function filterRestrictedFields(arrayOfFields: any, restrictedFields: any) {
-  return arrayOfFields.filter((val: any) => !restrictedFields.includes(val.trim()));
 }
