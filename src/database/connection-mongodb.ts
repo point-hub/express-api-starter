@@ -22,64 +22,7 @@ import {
   IResponseRead,
   IResponseReadAll,
 } from "./connection.js";
-
-export function sort(fields: string) {
-  if (!fields) return null;
-  const hash: any = {};
-  let c;
-  fields.split(",").forEach(function (field) {
-    c = field.charAt(0);
-    if (c === "-") field = field.substring(1);
-    hash[field.trim()] = c === "-" ? -1 : 1;
-  });
-  return hash;
-}
-
-/**
- * Query string parse string from request to filter mongodb
- * field selection, paging, sorting, filtering
- * fields   => fields(fields, restrictedFields)
- * filter   => filter(obj)
- * skip     => skip(val)
- * limit    => limit(val)
- * sort     => sort(fields)
- */
-function fields(fields = "", restrictedFields = []) {
-  const obj: any = {};
-  if (fields) {
-    /**
-     * Convert string to array
-     * ex: 'username, firstName, lastName => ['username', 'firstName', 'lastName']
-     */
-    let arrayOfFields = fields.split(",");
-    arrayOfFields = filterRestrictedFields(arrayOfFields, restrictedFields);
-
-    /**
-     * Convert array to object
-     * ex:['username', 'firstName', 'lastName'] to { username: 1, firstName: 1, lastName: 1 }
-     */
-
-    for (let i = 0; i < arrayOfFields.length; i++) {
-      obj[`${arrayOfFields[i].trim()}`] = 1;
-    }
-  }
-  /**
-   * Remove restricted fields
-   * ex: { password: 0 }
-   */
-  if (Object.keys(obj).length === 0 && obj.constructor === Object) {
-    for (let i = 0; i < restrictedFields.length; i++) {
-      obj[`${restrictedFields[i].trim()}`] = 0;
-    }
-  }
-
-  return obj;
-}
-
-// remove restricted fields from array
-function filterRestrictedFields(arrayOfFields: any, restrictedFields: any) {
-  return arrayOfFields.filter((val: any) => !restrictedFields.includes(val.trim()));
-}
+import { fields, sort } from "./mongodb-util.js";
 
 interface IDatabaseConfig {
   protocol: string;
@@ -170,7 +113,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
       .limit(limit)
       .skip((page - 1) * limit)
       .sort(sort(query.sort))
-      .project(query.project)
+      .project(fields(query.project))
       .toArray();
 
     const totalDocument = await this._collection.countDocuments();
@@ -178,9 +121,9 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     return {
       data: result as Array<IResponseRead>,
       page: page,
-      totalPerPage: limit,
-      totalPage: Math.round(totalDocument / limit),
       totalDocument,
+      totalPage: Math.round(totalDocument / limit),
+      totalPerPage: limit,
     };
   }
 
@@ -208,7 +151,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
 
   public startSession() {
     this.session = this.client.startSession();
-    return this;
+    return this.session;
   }
 
   public async endSession(): Promise<this> {

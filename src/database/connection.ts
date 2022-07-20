@@ -7,9 +7,7 @@ export interface Document {
 
 export interface IQuery {
   fields: string[];
-  filter: {
-    [key: string]: any;
-  };
+  filter: Document;
   page: number;
   limit: number;
   sort: string[];
@@ -22,7 +20,7 @@ export interface IDatabaseAdapter {
   close(): Promise<void>;
   database(name: string, options?: unknown): this;
   collection(name: string, options?: unknown): this;
-  startSession(): this;
+  startSession(): unknown;
   endSession(): Promise<this>;
   startTransaction(): this;
   commitTransaction(): Promise<this>;
@@ -30,7 +28,7 @@ export interface IDatabaseAdapter {
   create(doc: Document, options?: unknown): Promise<IResponseCreate>;
   // createMany(docs: Array<Document>, options?: unknown): Promise<IResponseCreateMany>;
   // read(filter: unknown, options?: unknown): Promise<IResponseRead>;
-  readAll(query: IQuery, options?: unknown): Promise<unknown>;
+  readAll(query: IQuery, options?: unknown): Promise<IResponseReadAll>;
   // update(filter: unknown, doc: Document): Promise<unknown>;
   // updateMany(filter: unknown, doc: Document): Promise<unknown>;
   // delete(filter: unknown): Promise<unknown>;
@@ -56,9 +54,9 @@ export interface IResponseRead {
 export interface IResponseReadAll {
   data: Array<IResponseRead>;
   page: number;
-  totalPerPage: number;
-  totalPage: number;
   totalDocument: number;
+  totalPage: number;
+  totalPerPage: number;
 }
 
 export default class DatabaseConnection {
@@ -127,8 +125,8 @@ export default class DatabaseConnection {
   //   return await this.adapter.read(filter, options);
   // }
 
-  public async readAll(query: IQuery): Promise<unknown> {
-    return await this.adapter.readAll(query);
+  public async readAll(query: IQuery, options?: unknown): Promise<IResponseReadAll> {
+    return await this.adapter.readAll(query, options);
   }
 
   // public async update(filter: unknown, document: Document): Promise<unknown> {

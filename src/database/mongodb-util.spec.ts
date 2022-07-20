@@ -1,4 +1,4 @@
-import { convertStringToArray, convertArrayToObject, addRestricted, sort } from "./mongodb-util.js";
+import { fields, convertStringToArray, convertArrayToObject, filterRestricted, sort } from "./mongodb-util.js";
 
 describe("field", () => {
   it("convert string to array", async () => {
@@ -15,13 +15,19 @@ describe("field", () => {
   it("add restricted fields to the object", async () => {
     const obj = { name: 1, password: 1 };
     const restricted = ["password"];
-    console.log(addRestricted(obj, restricted));
     const result = {
       ...obj,
-      ...addRestricted(obj, restricted),
+      ...filterRestricted(obj, restricted),
     };
     expect(result).toStrictEqual({
       name: 1,
+      password: 0,
+    });
+  });
+
+  it("filter fields", async () => {
+    const result = fields("", ["password"]);
+    expect(result).toStrictEqual({
       password: 0,
     });
   });

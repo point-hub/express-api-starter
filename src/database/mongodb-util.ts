@@ -1,32 +1,21 @@
+interface IFieldsObject {
+  [key: string]: number;
+}
+
+interface ISortObject {
+  [key: string]: number;
+}
+
 /**
  * Convert string param to mongodb field object
  *
  * @example
  * fields("name, address") // => { name: 1, address: 1 }
  */
-export function fields(fields = "", restrictedFields = []) {
-  let obj: any = {};
+export function fields(fields = "", restrictedFields: Array<string> = []): IFieldsObject {
+  const obj: IFieldsObject = convertArrayToObject(convertStringToArray(fields));
 
-  if (fields) {
-    let arrayOfFields = convertStringToArray(fields);
-    arrayOfFields = filterRestricted(arrayOfFields, restrictedFields);
-
-    obj = {
-      ...convertArrayToObject(arrayOfFields),
-    };
-  }
-
-  /**
-   * Remove restricted fields
-   * ex: { password: 0 }
-   */
-  if (Object.keys(obj).length === 0 && obj.constructor === Object) {
-    for (let i = 0; i < restrictedFields.length; i++) {
-      obj[`${restrictedFields[i]}`] = 0;
-    }
-  }
-
-  return obj;
+  return filterRestricted(obj, restrictedFields);
 }
 
 /**
@@ -58,22 +47,12 @@ export function convertArrayToObject(array: Array<string>) {
 }
 
 /**
- * Remove restricted fields from array
- *
- * @example
- * filterRestricted({ name: 1, password: 1}, ["password"]) => { name: 1, password: 0 }
- */
-export function filterRestricted(fields: any, restrictedFields: any) {
-  return fields.filter((val: any) => !restrictedFields.includes(val.trim()));
-}
-
-/**
  * Remove restricted fields
  *
  * @example
  * ex: { password: 0 }
  */
-export function addRestricted(obj: any, restrictedFields: Array<string>) {
+export function filterRestricted(obj: any, restrictedFields: Array<string>) {
   for (let i = 0; i < restrictedFields.length; i++) {
     obj[`${restrictedFields[i]}`] = 0;
   }
@@ -86,14 +65,15 @@ export function addRestricted(obj: any, restrictedFields: Array<string>) {
  * @example
  * sort("name, -createdAt") // => { name: 1, createdAt: -1 }
  */
-export function sort(fields: string) {
-  if (!fields) return null;
-  const hash: any = {};
-  let c;
+export function sort(fields: string): ISortObject {
+  const obj: ISortObject = {};
   fields.split(",").forEach(function (field) {
-    c = field.charAt(0);
-    if (c === "-") field = field.substring(1);
-    hash[field.trim()] = c === "-" ? -1 : 1;
+    if (field.charAt(0) === "-") {
+      field = field.substring(1);
+      obj[field.trim()] = -1;
+    } else {
+      obj[field.trim()] = 1;
+    }
   });
-  return hash;
+  return obj;
 }
