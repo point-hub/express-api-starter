@@ -14,6 +14,7 @@ import {
   ClientSession,
   DbOptions,
   CollectionOptions,
+  SortDirection,
 } from "mongodb";
 import {
   IDatabaseAdapter,
@@ -22,7 +23,7 @@ import {
   IResponseRead,
   IResponseReadAll,
 } from "./connection.js";
-import { fields, sort } from "./mongodb-util.js";
+import { fields, limit, page, skip, sort } from "./mongodb-util.js";
 
 interface IDatabaseConfig {
   protocol: string;
@@ -106,12 +107,10 @@ export default class MongoDbConnection implements IDatabaseAdapter {
       throw new Error("Collection not found");
     }
 
-    const page = parseInt(query.page ?? 1);
-    const limit = parseInt(query.limit ?? 2);
     const result = await this._collection
       .find(query.filter ?? {}, options ?? {})
-      .limit(limit)
-      .skip((page - 1) * limit)
+      .limit(limit(query.limit))
+      .skip(skip(page(query.page), limit(query.limit)))
       .sort(sort(query.sort))
       .project(fields(query.project))
       .toArray();
@@ -120,10 +119,10 @@ export default class MongoDbConnection implements IDatabaseAdapter {
 
     return {
       data: result as Array<IResponseRead>,
-      page: page,
+      page: page(query.page),
       totalDocument,
-      totalPage: Math.round(totalDocument / limit),
-      totalPerPage: limit,
+      totalPage: Math.round(totalDocument / limit(query.limit)),
+      totalPerPage: limit(query.limit),
     };
   }
 

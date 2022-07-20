@@ -1,9 +1,53 @@
+import { SortDirection } from "mongodb";
+
 interface IFieldsObject {
   [key: string]: number;
 }
 
 interface ISortObject {
-  [key: string]: number;
+  [key: string]: SortDirection;
+}
+
+/**
+ * Parse query string to number
+ *
+ * @example
+ * page("10") // => 10
+ * page(10) // => 10
+ */
+export function page(page: string | number = 1) {
+  if (typeof page === "string") {
+    return parseInt(page);
+  }
+
+  return page;
+}
+
+/**
+ * Parse query string to number
+ *
+ * @example
+ * limit("10") // => 10
+ * limit(10) // => 10
+ */
+export function limit(limit: string | number = 10) {
+  if (typeof limit === "string") {
+    return parseInt(limit);
+  }
+
+  return limit;
+}
+
+/**
+ * Skip number of data from page
+ *
+ * @example
+ * skip(1, 10) // => 0
+ * skip(2, 10) // => 10
+ * skip(3, 10) // => 20
+ */
+export function skip(page: number, limit: number) {
+  return (page - 1) * limit;
 }
 
 /**
