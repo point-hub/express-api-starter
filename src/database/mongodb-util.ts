@@ -24,7 +24,7 @@ export function fields(fields = "", restrictedFields: Array<string> = []): IFiel
  * @example
  * convertStringToArray("name, address") // => ["name", "address"]
  */
-export function convertStringToArray(fields: string) {
+export function convertStringToArray(fields: string): Array<string> {
   return fields
     .split(" ")
     .join()
@@ -38,8 +38,8 @@ export function convertStringToArray(fields: string) {
  * @example
  * convertArrayToObject(["name", "address"]) // => { name: 1, address: 1 }
  */
-export function convertArrayToObject(array: Array<string>) {
-  const obj: any = {};
+export function convertArrayToObject(array: Array<string>): IFieldsObject {
+  const obj: IFieldsObject = {};
   for (let i = 0; i < array.length; i++) {
     obj[`${array[i].trim()}`] = 1;
   }
@@ -52,7 +52,7 @@ export function convertArrayToObject(array: Array<string>) {
  * @example
  * ex: { password: 0 }
  */
-export function filterRestricted(obj: any, restrictedFields: Array<string>) {
+export function filterRestricted(obj: IFieldsObject, restrictedFields: Array<string>): IFieldsObject {
   for (let i = 0; i < restrictedFields.length; i++) {
     obj[`${restrictedFields[i]}`] = 0;
   }
