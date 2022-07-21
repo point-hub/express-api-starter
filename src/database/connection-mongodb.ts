@@ -18,11 +18,12 @@ import {
 import {
   IDatabaseAdapter,
   IDocument,
+  IFilter,
   IQuery,
   IResponseCreate,
   IResponseCreateMany,
   IResponseRead,
-  IResponseReadAll,
+  IResponseReadMany,
 } from "./connection.js";
 import { fields, limit, page, skip, sort } from "./mongodb-util.js";
 
@@ -100,11 +101,19 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   //   };
   // }
 
-  // public async read(filter: Filter<Document>, options?: FindOptions): Promise<unknown> {
-  //   return await this.collection("a").findOne(filter, options ?? {});
-  // }
+  public async read(filter: IFilter, options?: FindOptions): Promise<IResponseRead> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
 
-  public async readAll(query: IQuery, options?: FindOptions): Promise<IResponseReadAll> {
+    const result = await this._collection.findOne(filter, options ?? {});
+
+    return {
+      ...result,
+    };
+  }
+
+  public async readMany(query: IQuery, options?: FindOptions): Promise<IResponseReadMany> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }

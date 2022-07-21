@@ -1,6 +1,6 @@
 import { Filter } from "mongodb";
 import { BaseRepository } from "./base-repository.js";
-import DatabaseConnection, { IDocument, IQuery, IResponseCreate } from "./connection.js";
+import DatabaseConnection, { IDocument, IFilter, IQuery, IResponseCreate } from "./connection.js";
 
 export class UserRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
@@ -15,12 +15,12 @@ export class UserRepository extends BaseRepository {
   //   return await this.collection.insertMany(docs);
   // }
 
-  // public async read(filter: Filter<IDocument>, options: FindOptions): Promise<unknown> {
-  //   return await this.collection.findOne(filter, options);
-  // }
+  public async read(filter: IFilter, options?: unknown): Promise<unknown> {
+    return await this.collection().read(filter, options);
+  }
 
-  public async readAll(query: IQuery): Promise<unknown> {
-    return await this.collection().readAll(query);
+  public async readMany(query: IQuery): Promise<unknown> {
+    return await this.collection().readMany(query);
   }
 
   // public async update(filter: Filter<IDocument>, document: IDocument): Promise<unknown> {

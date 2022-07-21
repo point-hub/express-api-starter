@@ -18,7 +18,7 @@ export class CustomerRepository extends BaseRepository {
   //   return await this.collection.findOne(filter, options);
   // }
 
-  // public async readAll(filter: Filter<IDocument>): Promise<unknown> {
+  // public async readMany(filter: Filter<IDocument>): Promise<unknown> {
   //   return await this.collection.find(filter).toArray();
   // }
 

@@ -4,7 +4,7 @@ export interface RepositoryBridge {
   collection: Collection;
   create(): Promise<void>;
   createMany(): Promise<void>;
-  readAll(): Promise<void>;
+  readMany(): Promise<void>;
   readOne(): Promise<void>;
   updateOne(): Promise<void>;
   updateMany(): Promise<void>;

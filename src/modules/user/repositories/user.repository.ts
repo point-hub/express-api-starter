@@ -31,7 +31,7 @@
 //     console.log("ccc ");
 //   }
 
-//   async readAll(filter: Filter<Document>) {
+//   async readMany(filter: Filter<Document>) {
 //     await this.collection.find(filter).toArray();
 //   }
 

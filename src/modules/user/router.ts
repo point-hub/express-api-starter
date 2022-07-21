@@ -7,7 +7,7 @@ const router = Router();
 
 router.use(testMiddleware);
 
-router.get("/", controller.readAll);
+router.get("/", controller.readMany);
 router.get("/:id", controller.readOne);
 router.post("/", controller.create);
 router.patch("/:id", controller.update);

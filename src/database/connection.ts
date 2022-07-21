@@ -5,6 +5,11 @@ export interface IDocument {
   [key: string]: any;
 }
 
+export interface IFilter {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
 export interface IQuery {
   fields: string;
   filter: IDocument;
@@ -27,13 +32,13 @@ export interface IDatabaseAdapter {
   abortTransaction(): Promise<this>;
   create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
   // createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
-  // read(filter: unknown, options?: unknown): Promise<IResponseRead>;
-  readAll(query: IQuery, options?: unknown): Promise<IResponseReadAll>;
+  read(filter: IFilter, options?: unknown): Promise<IResponseRead>;
+  readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
   // update(filter: unknown, doc: IDocument): Promise<unknown>;
   // updateMany(filter: unknown, doc: IDocument): Promise<unknown>;
   // delete(filter: unknown): Promise<unknown>;
   // deleteMany(filter: unknown): Promise<unknown>;
-  // aggregate(filter: unknown, options?: unknown): Promise<IResponseReadAll>;
+  // aggregate(filter: unknown, options?: unknown): Promise<IResponseReadMany>;
 }
 
 export interface IResponseCreate {
@@ -51,7 +56,7 @@ export interface IResponseRead {
   [key: string]: unknown;
 }
 
-export interface IResponseReadAll {
+export interface IResponseReadMany {
   data: Array<IResponseRead>;
   page: number;
   totalDocument: number;
@@ -122,12 +127,12 @@ export default class DatabaseConnection {
   //   return await this.adapter.createMany(docs);
   // }
 
-  // public async read(filter: unknown, options: unknown): Promise<unknown> {
-  //   return await this.adapter.read(filter, options);
-  // }
+  public async read(filter: IFilter, options: unknown): Promise<IResponseRead> {
+    return await this.adapter.read(filter, options);
+  }
 
-  public async readAll(query: IQuery, options?: unknown): Promise<IResponseReadAll> {
-    return await this.adapter.readAll(query, options);
+  public async readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany> {
+    return await this.adapter.readMany(query, options);
   }
 
   // public async update(filter: unknown, document: IDocument): Promise<unknown> {
