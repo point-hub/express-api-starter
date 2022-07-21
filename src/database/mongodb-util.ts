@@ -1,4 +1,4 @@
-import { SortDirection } from "mongodb";
+import { Filter, SortDirection } from "mongodb";
 
 interface IFieldsObject {
   [key: string]: number;
@@ -15,7 +15,7 @@ interface ISortObject {
  * page("10") // => 10
  * page(10) // => 10
  */
-export function page(page: string | number = 1) {
+export function page(page: string | number = 1): number {
   if (typeof page === "string") {
     return parseInt(page);
   }
@@ -30,7 +30,7 @@ export function page(page: string | number = 1) {
  * limit("10") // => 10
  * limit(10) // => 10
  */
-export function limit(limit: string | number = 10) {
+export function limit(limit: string | number = 10): number {
   if (typeof limit === "string") {
     return parseInt(limit);
   }
@@ -46,8 +46,12 @@ export function limit(limit: string | number = 10) {
  * skip(2, 10) // => 10
  * skip(3, 10) // => 20
  */
-export function skip(page: number, limit: number) {
+export function skip(page: number, limit: number): number {
   return (page - 1) * limit;
+}
+
+export function filter(doc: any) {
+  return doc;
 }
 
 /**

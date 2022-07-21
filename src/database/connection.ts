@@ -1,16 +1,16 @@
 import { ObjectId } from "mongodb";
 
-export interface Document {
+export interface IDocument {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
 export interface IQuery {
-  fields: string[];
-  filter: Document;
+  fields: string;
+  filter: IDocument;
   page: number;
   limit: number;
-  sort: string[];
+  sort: string;
 }
 
 export interface IDatabaseAdapter {
@@ -25,12 +25,12 @@ export interface IDatabaseAdapter {
   startTransaction(): this;
   commitTransaction(): Promise<this>;
   abortTransaction(): Promise<this>;
-  create(doc: Document, options?: unknown): Promise<IResponseCreate>;
-  // createMany(docs: Array<Document>, options?: unknown): Promise<IResponseCreateMany>;
+  create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
+  // createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
   // read(filter: unknown, options?: unknown): Promise<IResponseRead>;
   readAll(query: IQuery, options?: unknown): Promise<IResponseReadAll>;
-  // update(filter: unknown, doc: Document): Promise<unknown>;
-  // updateMany(filter: unknown, doc: Document): Promise<unknown>;
+  // update(filter: unknown, doc: IDocument): Promise<unknown>;
+  // updateMany(filter: unknown, doc: IDocument): Promise<unknown>;
   // delete(filter: unknown): Promise<unknown>;
   // deleteMany(filter: unknown): Promise<unknown>;
   // aggregate(filter: unknown, options?: unknown): Promise<IResponseReadAll>;
@@ -78,8 +78,9 @@ export default class DatabaseConnection {
     await this.adapter.close();
   }
 
-  public database(name: string): IDatabaseAdapter {
-    return this.adapter.database(name);
+  public database(name: string): this {
+    this.adapter.database(name);
+    return this;
   }
 
   public collection(name: string): this {
@@ -112,11 +113,11 @@ export default class DatabaseConnection {
     return this;
   }
 
-  public async create(doc: Document, options?: unknown): Promise<IResponseCreate> {
+  public async create(doc: IDocument, options?: unknown): Promise<IResponseCreate> {
     return await this.adapter.create(doc, options);
   }
 
-  // public async createMany(docs: Array<Document>): Promise<unknown> {
+  // public async createMany(docs: Array<IDocument>): Promise<unknown> {
   //   console.log(docs);
   //   return await this.adapter.createMany(docs);
   // }
@@ -129,11 +130,11 @@ export default class DatabaseConnection {
     return await this.adapter.readAll(query, options);
   }
 
-  // public async update(filter: unknown, document: Document): Promise<unknown> {
+  // public async update(filter: unknown, document: IDocument): Promise<unknown> {
   //   return await this.adapter.update(filter, document);
   // }
 
-  // public async updateMany(filter: unknown, document: Document): Promise<unknown> {
+  // public async updateMany(filter: unknown, document: IDocument): Promise<unknown> {
   //   return await this.adapter.updateMany(filter, document);
   // }
 
@@ -145,7 +146,7 @@ export default class DatabaseConnection {
   //   return await this.adapter.deleteMany(filter);
   // }
 
-  // public async aggregate(filter: Array<Document>): Promise<unknown> {
+  // public async aggregate(filter: Array<IDocument>): Promise<unknown> {
   //   return await this.adapter.aggregate(filter);
   // }
 }

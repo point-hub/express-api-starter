@@ -7,6 +7,7 @@ const dbConnection = new DatabaseConnection(
     name: connection[connection.default].name,
     protocol: connection[connection.default].protocol,
     host: connection[connection.default].host,
+    url: connection[connection.default].url,
   })
 );
 try {

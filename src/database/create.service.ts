@@ -1,14 +1,14 @@
 import { CustomerRepository } from "./customer.repository.js";
 import { UserEntity } from "./user.entity.js";
 import { UserRepository } from "./user.repository.js";
-import DatabaseConnection, { Document } from "@src/database/connection.js";
+import DatabaseConnection, { IDocument } from "@src/database/connection.js";
 
 export class CreateUserService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
-  public async handle(doc: Document, session: unknown) {
+  public async handle(doc: IDocument, session: unknown) {
     const userEntity = new UserEntity({
       username: doc.username,
       password: doc.password,

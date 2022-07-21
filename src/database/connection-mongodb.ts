@@ -3,7 +3,6 @@ import {
   MongoClientOptions,
   Filter,
   FindOptions,
-  Document,
   Collection,
   Db,
   InsertOneOptions,
@@ -18,6 +17,8 @@ import {
 } from "mongodb";
 import {
   IDatabaseAdapter,
+  IDocument,
+  IQuery,
   IResponseCreate,
   IResponseCreateMany,
   IResponseRead,
@@ -31,6 +32,7 @@ interface IDatabaseConfig {
   name: string;
   username?: string;
   password?: string;
+  url?: string;
 }
 
 export default class MongoDbConnection implements IDatabaseAdapter {
@@ -49,7 +51,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   }
 
   public url(): string {
-    return "mongodb://localhost:27017";
+    return this.config.url ?? "";
   }
 
   /**
@@ -78,7 +80,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     return this;
   }
 
-  public async create(doc: Document, options?: InsertOneOptions): Promise<IResponseCreate> {
+  public async create(doc: IDocument, options?: InsertOneOptions): Promise<IResponseCreate> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
@@ -102,7 +104,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
   //   return await this.collection("a").findOne(filter, options ?? {});
   // }
 
-  public async readAll(query: Filter<Document>, options?: FindOptions): Promise<IResponseReadAll> {
+  public async readAll(query: IQuery, options?: FindOptions): Promise<IResponseReadAll> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
@@ -112,7 +114,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
       .limit(limit(query.limit))
       .skip(skip(page(query.page), limit(query.limit)))
       .sort(sort(query.sort))
-      .project(fields(query.project))
+      .project(fields(query.fields))
       .toArray();
 
     const totalDocument = await this._collection.countDocuments();
@@ -126,11 +128,11 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     };
   }
 
-  // public async update(filter: Filter<Document>, document: Document, options?: UpdateOptions): Promise<unknown> {
+  // public async update(filter: Filter<Document>, document: IDocument, options?: UpdateOptions): Promise<unknown> {
   //   return await this.collection("a").updateOne(filter, document, options ?? {});
   // }
 
-  // public async updateMany(filter: Filter<Document>, document: Document, options?: UpdateOptions): Promise<unknown> {
+  // public async updateMany(filter: Filter<Document>, document: IDocument, options?: UpdateOptions): Promise<unknown> {
   //   return await this.collection("a").updateMany(filter, document, options ?? {});
   // }
 
