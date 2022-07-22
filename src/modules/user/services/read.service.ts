@@ -1,10 +1,9 @@
-import { UserRepository } from "./user.repository.js";
+import { UserRepository } from "../repositories/user.repository.js";
 import DatabaseConnection, { IFilter } from "@src/database/connection.js";
 
-export class ReadOneUserService {
+export class ReadUserService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
-    console.log(db);
     this.db = db;
   }
   public async handle(filter: IFilter) {

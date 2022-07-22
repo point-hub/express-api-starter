@@ -93,13 +93,17 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     };
   }
 
-  // public async createMany(docs: Array<Document>, options?: BulkWriteOptions): Promise<IResponseCreateMany> {
-  //   const response = await this.collection("a").insertMany(docs, options ?? {});
-  //   return {
-  //     count: response.insertedCount,
-  //     data: ["1"],
-  //   };
-  // }
+  public async createMany(docs: Array<Document>, options?: BulkWriteOptions): Promise<IResponseCreateMany> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
+
+    const response = await this._collection.insertMany(docs, options ?? {});
+    return {
+      count: response.insertedCount,
+      data: ["1"],
+    };
+  }
 
   public async read(filter: IFilter, options?: FindOptions): Promise<IResponseRead> {
     if (!this._collection) {

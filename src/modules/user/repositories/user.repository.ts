@@ -1,61 +1,44 @@
-// import { Collection, Document, Filter } from "mongodb";
-// import { IUser } from "../entities/user.entity.js";
-// import DatabaseConnection from "@src/database/connection.js";
+import { BaseRepository } from "@src/database/base-repository.js";
+import DatabaseConnection, { IDocument, IFilter, IQuery, IResponseCreate } from "@src/database/connection.js";
 
-// export class UserRepository {
-//   collection: Collection;
+export class UserRepository extends BaseRepository {
+  constructor(db: DatabaseConnection) {
+    super(db, "user");
+  }
 
-//   constructor(db: DatabaseConnection) {
-//     const name = "user";
-//     this.collection = db.collection(name) as Collection;
-//   }
+  public async create(doc: IDocument, options: unknown): Promise<IResponseCreate> {
+    return await this.collection().create(doc, options);
+  }
 
-//   async create(user: Partial<IUser>) {
-//     await this.collection.insertOne(user);
-//   }
+  public async createMany(docs: Array<IDocument>, options?: unknown): Promise<unknown> {
+    return await this.collection().createMany(docs, options);
+  }
 
-//   async createMany(users: Array<Partial<IUser>>) {
-//     const b = [
-//       {
-//         username: "aaa",
-//       },
-//       {
-//         username: "aaa",
-//       },
-//     ];
-//     console.log(users);
-//     console.log(b);
-//     const a = await this.collection.insertMany(users);
-//     console.log("bbbb ");
-//     console.log(a);
-//     console.log("ccc ");
-//   }
+  public async read(filter: IFilter, options?: unknown): Promise<unknown> {
+    return await this.collection().read(filter, options);
+  }
 
-//   async readMany(filter: Filter<Document>) {
-//     await this.collection.find(filter).toArray();
-//   }
+  public async readMany(query: IQuery): Promise<unknown> {
+    return await this.collection().readMany(query);
+  }
 
-//   async readOne(filter: Filter<Document>) {
-//     await this.collection.findOne(filter);
-//   }
+  // public async update(filter: Filter<IDocument>, document: IDocument): Promise<unknown> {
+  //   return await this.collection.updateOne(filter, document);
+  // }
 
-//   async update(filter: Filter<Document>, document: Document) {
-//     await this.collection.updateOne(filter, document);
-//   }
+  // public async updateMany(filter: Filter<IDocument>, document: IDocument): Promise<unknown> {
+  //   return await this.collection.updateMany(filter, document);
+  // }
 
-//   async updateMany(filter: Filter<Document>, document: Document) {
-//     await this.collection.updateMany(filter, document);
-//   }
+  // public async delete(filter: Filter<IDocument>): Promise<unknown> {
+  //   return await this.collection.deleteOne(filter);
+  // }
 
-//   async destroyOne(filter: Filter<Document>) {
-//     await this.collection.deleteOne(filter);
-//   }
+  // public async deleteMany(filter: Filter<IDocument>): Promise<unknown> {
+  //   return await this.collection.deleteMany(filter);
+  // }
 
-//   async destroyMany(filter: Filter<Document>) {
-//     await this.collection.deleteMany(filter);
-//   }
-
-//   async aggregate(filter: Array<Document>) {
-//     await this.collection.aggregate(filter).toArray();
-//   }
-// }
+  // public async aggregate(filter: Array<IDocument>): Promise<unknown> {
+  //   return await this.collection.aggregate(filter).toArray();
+  // }
+}

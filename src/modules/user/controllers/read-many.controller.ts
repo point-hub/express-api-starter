@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { ReadManyUserService } from "../services/read-many.service.js";
 import { db } from "@src/database/database.js";
-import { ReadManyUserService } from "@src/database/read-all.service.js";
 
 export const readMany = async (req: Request, res: Response, next: NextFunction) => {
   try {

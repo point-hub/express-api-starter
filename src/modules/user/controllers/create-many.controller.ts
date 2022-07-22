@@ -1,21 +1,22 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateUserService } from "../services/create.service.js";
+import { CreateManyUserService } from "../services/create-many.service.js";
 import { db } from "@src/database/database.js";
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const createMany = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session = db.startSession();
 
     db.startTransaction();
 
-    const createUserService = new CreateUserService(db);
+    console.log(req.body);
+    return res.json({});
+
+    const createUserService = new CreateManyUserService(db);
     const result = await createUserService.handle(req.body, session);
 
     await db.commitTransaction();
 
-    res.status(201).json({
-      _id: result._id,
-    });
+    res.status(201).json(result);
   } catch (error) {
     await db.abortTransaction();
     next(error);

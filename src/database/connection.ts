@@ -31,7 +31,7 @@ export interface IDatabaseAdapter {
   commitTransaction(): Promise<this>;
   abortTransaction(): Promise<this>;
   create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
-  // createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
+  createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
   read(filter: IFilter, options?: unknown): Promise<IResponseRead>;
   readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
   // update(filter: unknown, doc: IDocument): Promise<unknown>;
@@ -122,10 +122,9 @@ export default class DatabaseConnection {
     return await this.adapter.create(doc, options);
   }
 
-  // public async createMany(docs: Array<IDocument>): Promise<unknown> {
-  //   console.log(docs);
-  //   return await this.adapter.createMany(docs);
-  // }
+  public async createMany(docs: Array<IDocument>, options: unknown): Promise<unknown> {
+    return await this.adapter.createMany(docs, options);
+  }
 
   public async read(filter: IFilter, options: unknown): Promise<IResponseRead> {
     return await this.adapter.read(filter, options);

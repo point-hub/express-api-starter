@@ -1,4 +1,4 @@
-import { UserRepository } from "./user.repository.js";
+import { UserRepository } from "../repositories/user.repository.js";
 import DatabaseConnection, { IQuery } from "@src/database/connection.js";
 
 export class ReadManyUserService {
