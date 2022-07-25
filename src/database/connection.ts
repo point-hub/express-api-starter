@@ -47,8 +47,11 @@ export interface IResponseCreate {
 }
 
 export interface IResponseCreateMany {
-  count: number;
-  data: Array<string>;
+  acknowledged: boolean;
+  /** The number of inserted documents for this operations */
+  insertedCount: number;
+  /** Map of the index of the inserted document to the id of the inserted document */
+  insertedData: Array<IResponseCreate>;
 }
 
 export interface IResponseRead {

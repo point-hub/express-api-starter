@@ -99,9 +99,14 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     }
 
     const response = await this._collection.insertMany(docs, options ?? {});
+    const insertedData = Object.keys(response.insertedIds).map(function (key: string | number) {
+      return { _id: response.insertedIds[key as number].toString() };
+    });
+    console.log(insertedData);
     return {
-      count: response.insertedCount,
-      data: ["1"],
+      acknowledged: response.acknowledged,
+      insertedCount: response.insertedCount,
+      insertedData: insertedData,
     };
   }
 

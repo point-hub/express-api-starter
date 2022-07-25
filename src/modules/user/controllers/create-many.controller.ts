@@ -8,9 +8,6 @@ export const createMany = async (req: Request, res: Response, next: NextFunction
 
     db.startTransaction();
 
-    console.log(req.body);
-    return res.json({});
-
     const createUserService = new CreateManyUserService(db);
     const result = await createUserService.handle(req.body, session);
 
