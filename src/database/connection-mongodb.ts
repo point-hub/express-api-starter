@@ -102,7 +102,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     const insertedData = Object.keys(response.insertedIds).map(function (key: string | number) {
       return { _id: response.insertedIds[key as number].toString() };
     });
-    console.log(insertedData);
+
     return {
       acknowledged: response.acknowledged,
       insertedCount: response.insertedCount,

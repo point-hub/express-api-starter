@@ -1,5 +1,11 @@
 import { BaseRepository } from "@src/database/base-repository.js";
-import DatabaseConnection, { IDocument, IFilter, IQuery, IResponseCreate } from "@src/database/connection.js";
+import DatabaseConnection, {
+  IDocument,
+  IFilter,
+  IQuery,
+  IResponseCreate,
+  IResponseCreateMany,
+} from "@src/database/connection.js";
 
 export class UserRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
@@ -10,7 +16,7 @@ export class UserRepository extends BaseRepository {
     return await this.collection().create(doc, options);
   }
 
-  public async createMany(docs: Array<IDocument>, options?: unknown): Promise<unknown> {
+  public async createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany> {
     return await this.collection().createMany(docs, options);
   }
 

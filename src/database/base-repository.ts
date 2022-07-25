@@ -1,4 +1,4 @@
-import DatabaseConnection, { IDocument, IResponseCreate, IResponseCreateMany } from "./connection.js";
+import DatabaseConnection, { IDocument, IQuery, IResponseCreate, IResponseCreateMany } from "./connection.js";
 
 export abstract class BaseRepository {
   public db: DatabaseConnection;
@@ -14,9 +14,9 @@ export abstract class BaseRepository {
   }
 
   abstract create(doc: IDocument, options?: any): Promise<IResponseCreate>;
-  // abstract createMany(docs: Array<IDocument>, options?: any): Promise<IResponseCreateMany>;
+  abstract createMany(docs: Array<IDocument>, options?: any): Promise<IResponseCreateMany>;
   abstract read(filter: any, options?: any): Promise<unknown>;
-  abstract readMany(filter: any, options?: any): Promise<unknown>;
+  abstract readMany(query: IQuery, options?: any): Promise<unknown>;
   // abstract update(filter: any, document: IDocument, options?: any): Promise<unknown>;
   // abstract updateMany(filter: any, document: IDocument, options?: any): Promise<unknown>;
   // abstract delete(filter: any, options?: any): Promise<unknown>;

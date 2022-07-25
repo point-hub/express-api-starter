@@ -125,7 +125,7 @@ export default class DatabaseConnection {
     return await this.adapter.create(doc, options);
   }
 
-  public async createMany(docs: Array<IDocument>, options: unknown): Promise<unknown> {
+  public async createMany(docs: Array<IDocument>, options: unknown): Promise<IResponseCreateMany> {
     return await this.adapter.createMany(docs, options);
   }
 
