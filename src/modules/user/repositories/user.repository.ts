@@ -13,6 +13,7 @@ export class UserRepository extends BaseRepository {
   }
 
   public async create(doc: IDocument, options: unknown): Promise<IResponseCreate> {
+    console.log(doc);
     return await this.collection().create(doc, options);
   }
 
@@ -20,8 +21,8 @@ export class UserRepository extends BaseRepository {
     return await this.collection().createMany(docs, options);
   }
 
-  public async read(filter: IFilter, options?: unknown): Promise<unknown> {
-    return await this.collection().read(filter, options);
+  public async read(id: string, options?: unknown): Promise<unknown> {
+    return await this.collection().read(id, options);
   }
 
   public async readMany(query: IQuery): Promise<unknown> {

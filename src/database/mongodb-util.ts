@@ -115,13 +115,16 @@ export function filterRestricted(obj: IFieldsObject, restrictedFields: Array<str
  */
 export function sort(fields: string): ISortObject {
   const obj: ISortObject = {};
-  fields.split(",").forEach(function (field) {
-    if (field.charAt(0) === "-") {
-      field = field.substring(1);
-      obj[field.trim()] = -1;
-    } else {
-      obj[field.trim()] = 1;
-    }
-  });
+
+  if (fields) {
+    fields.split(",").forEach(function (field) {
+      if (field.charAt(0) === "-") {
+        field = field.substring(1);
+        obj[field.trim()] = -1;
+      } else {
+        obj[field.trim()] = 1;
+      }
+    });
+  }
   return obj;
 }

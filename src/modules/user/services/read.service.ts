@@ -6,8 +6,8 @@ export class ReadUserService {
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
-  public async handle(filter: IFilter) {
+  public async handle(id: string) {
     const userRepository = new UserRepository(this.db);
-    return await userRepository.read(filter);
+    return await userRepository.read(id);
   }
 }

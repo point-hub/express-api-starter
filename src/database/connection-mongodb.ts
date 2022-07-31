@@ -14,6 +14,7 @@ import {
   DbOptions,
   CollectionOptions,
   SortDirection,
+  ObjectId,
 } from "mongodb";
 import {
   IDatabaseAdapter,
@@ -110,12 +111,17 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     };
   }
 
-  public async read(filter: IFilter, options?: FindOptions): Promise<IResponseRead> {
+  public async read(id: string, options?: FindOptions): Promise<IResponseRead> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
 
-    const result = await this._collection.findOne(filter, options ?? {});
+    const result = await this._collection.findOne(
+      {
+        _id: new ObjectId(id),
+      },
+      options ?? {}
+    );
 
     return {
       ...result,
@@ -127,13 +133,20 @@ export default class MongoDbConnection implements IDatabaseAdapter {
       throw new Error("Collection not found");
     }
 
-    const result = await this._collection
+    const cursor = this._collection
       .find(query.filter ?? {}, options ?? {})
       .limit(limit(query.limit))
-      .skip(skip(page(query.page), limit(query.limit)))
-      .sort(sort(query.sort))
-      .project(fields(query.fields))
-      .toArray();
+      .skip(skip(page(query.page), limit(query.limit)));
+
+    if (sort(query.sort)) {
+      cursor.sort(sort(query.sort));
+    }
+
+    if (fields(query.fields)) {
+      cursor.project(fields(query.fields));
+    }
+
+    const result = await cursor.toArray();
 
     const totalDocument = await this._collection.countDocuments();
 

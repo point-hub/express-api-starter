@@ -12,10 +12,14 @@ export interface IFilter {
 
 export interface IQuery {
   fields: string;
-  filter: IDocument;
+  filter: IFilter;
   page: number;
   limit: number;
   sort: string;
+}
+
+export interface IOptions {
+  session: unknown;
 }
 
 export interface IDatabaseAdapter {
@@ -32,7 +36,7 @@ export interface IDatabaseAdapter {
   abortTransaction(): Promise<this>;
   create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
   createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
-  read(filter: IFilter, options?: unknown): Promise<IResponseRead>;
+  read(id: string, options?: unknown): Promise<IResponseRead>;
   readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
   // update(filter: unknown, doc: IDocument): Promise<unknown>;
   // updateMany(filter: unknown, doc: IDocument): Promise<unknown>;
@@ -129,8 +133,8 @@ export default class DatabaseConnection {
     return await this.adapter.createMany(docs, options);
   }
 
-  public async read(filter: IFilter, options: unknown): Promise<IResponseRead> {
-    return await this.adapter.read(filter, options);
+  public async read(id: string, options: unknown): Promise<IResponseRead> {
+    return await this.adapter.read(id, options);
   }
 
   public async readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany> {

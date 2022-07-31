@@ -19,6 +19,7 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": ["error", { printWidth: 120 }],
+    // semi: ["warn", "never"],
     "import/order": [
       "error",
       {
