@@ -35,27 +35,16 @@ export interface IDatabaseAdapter {
   commitTransaction(): Promise<this>;
   abortTransaction(): Promise<this>;
   create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
-  createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany>;
   read(id: string, options?: unknown): Promise<IResponseRead>;
   readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
   // update(filter: unknown, doc: IDocument): Promise<unknown>;
-  // updateMany(filter: unknown, doc: IDocument): Promise<unknown>;
   // delete(filter: unknown): Promise<unknown>;
-  // deleteMany(filter: unknown): Promise<unknown>;
   // aggregate(filter: unknown, options?: unknown): Promise<IResponseReadMany>;
 }
 
 export interface IResponseCreate {
   _id: string;
   [key: string]: unknown;
-}
-
-export interface IResponseCreateMany {
-  acknowledged: boolean;
-  /** The number of inserted documents for this operations */
-  insertedCount: number;
-  /** Map of the index of the inserted document to the id of the inserted document */
-  insertedData: Array<IResponseCreate>;
 }
 
 export interface IResponseRead {
@@ -129,10 +118,6 @@ export default class DatabaseConnection {
     return await this.adapter.create(doc, options);
   }
 
-  public async createMany(docs: Array<IDocument>, options: unknown): Promise<IResponseCreateMany> {
-    return await this.adapter.createMany(docs, options);
-  }
-
   public async read(id: string, options: unknown): Promise<IResponseRead> {
     return await this.adapter.read(id, options);
   }
@@ -145,16 +130,8 @@ export default class DatabaseConnection {
   //   return await this.adapter.update(filter, document);
   // }
 
-  // public async updateMany(filter: unknown, document: IDocument): Promise<unknown> {
-  //   return await this.adapter.updateMany(filter, document);
-  // }
-
   // public async delete(filter: unknown): Promise<unknown> {
   //   return await this.adapter.delete(filter);
-  // }
-
-  // public async deleteMany(filter: unknown): Promise<unknown> {
-  //   return await this.adapter.deleteMany(filter);
   // }
 
   // public async aggregate(filter: Array<IDocument>): Promise<unknown> {

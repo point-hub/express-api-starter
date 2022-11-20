@@ -1,6 +1,8 @@
 export interface IUser {
   username: string;
   password: string;
+  email: string;
+  fullName: string;
   emailValidationCode?: string;
   status?: "registered" | "activated" | "suspended";
 }

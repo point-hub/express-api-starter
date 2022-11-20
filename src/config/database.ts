@@ -24,7 +24,7 @@ export const connection: IDatabaseConfig = {
   mongodb: {
     driver: "mongodb",
     protocol: "mongodb",
-    url: "mongodb://localhost:27017",
+    url: process.env.DATABASE_URL,
     host: "localhost",
     port: 27017,
     name: "starter",

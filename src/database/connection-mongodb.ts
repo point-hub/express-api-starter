@@ -22,7 +22,6 @@ import {
   IFilter,
   IQuery,
   IResponseCreate,
-  IResponseCreateMany,
   IResponseRead,
   IResponseReadMany,
 } from "./connection.js";
@@ -94,23 +93,6 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     };
   }
 
-  public async createMany(docs: Array<Document>, options?: BulkWriteOptions): Promise<IResponseCreateMany> {
-    if (!this._collection) {
-      throw new Error("Collection not found");
-    }
-
-    const response = await this._collection.insertMany(docs, options ?? {});
-    const insertedData = Object.keys(response.insertedIds).map(function (key: string | number) {
-      return { _id: response.insertedIds[key as number].toString() };
-    });
-
-    return {
-      acknowledged: response.acknowledged,
-      insertedCount: response.insertedCount,
-      insertedData: insertedData,
-    };
-  }
-
   public async read(id: string, options?: FindOptions): Promise<IResponseRead> {
     if (!this._collection) {
       throw new Error("Collection not found");
@@ -148,7 +130,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
 
     const result = await cursor.toArray();
 
-    const totalDocument = await this._collection.countDocuments();
+    const totalDocument = await this._collection.countDocuments(query.filter ?? {}, options ?? {});
 
     return {
       data: result as Array<IResponseRead>,

@@ -11,8 +11,9 @@ export class CreateUserService {
     const userEntity = new UserEntity({
       username: doc.username,
       password: doc.password,
+      email: doc.email,
+      fullName: doc.fullName,
     });
-    userEntity.suspendUser();
 
     const userRepository = new UserRepository(this.db);
     return await userRepository.create(userEntity.user, { session });

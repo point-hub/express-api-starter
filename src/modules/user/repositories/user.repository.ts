@@ -1,11 +1,5 @@
 import { BaseRepository } from "@src/database/base-repository.js";
-import DatabaseConnection, {
-  IDocument,
-  IFilter,
-  IQuery,
-  IResponseCreate,
-  IResponseCreateMany,
-} from "@src/database/connection.js";
+import DatabaseConnection, { IDocument, IQuery, IResponseCreate } from "@src/database/connection.js";
 
 export class UserRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
@@ -13,12 +7,7 @@ export class UserRepository extends BaseRepository {
   }
 
   public async create(doc: IDocument, options: unknown): Promise<IResponseCreate> {
-    console.log(doc);
     return await this.collection().create(doc, options);
-  }
-
-  public async createMany(docs: Array<IDocument>, options?: unknown): Promise<IResponseCreateMany> {
-    return await this.collection().createMany(docs, options);
   }
 
   public async read(id: string, options?: unknown): Promise<unknown> {
@@ -33,16 +22,8 @@ export class UserRepository extends BaseRepository {
   //   return await this.collection.updateOne(filter, document);
   // }
 
-  // public async updateMany(filter: Filter<IDocument>, document: IDocument): Promise<unknown> {
-  //   return await this.collection.updateMany(filter, document);
-  // }
-
   // public async delete(filter: Filter<IDocument>): Promise<unknown> {
   //   return await this.collection.deleteOne(filter);
-  // }
-
-  // public async deleteMany(filter: Filter<IDocument>): Promise<unknown> {
-  //   return await this.collection.deleteMany(filter);
   // }
 
   // public async aggregate(filter: Array<IDocument>): Promise<unknown> {

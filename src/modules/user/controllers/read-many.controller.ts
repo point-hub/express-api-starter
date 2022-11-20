@@ -8,11 +8,11 @@ export const readMany = async (req: Request, res: Response, next: NextFunction) 
     const readManyUserService = new ReadManyUserService(db);
 
     const iQuery: IQuery = {
-      fields: req.body.field ?? "",
-      filter: req.body.filter ?? {},
-      page: req.body.page ?? 1,
-      limit: req.body.limit ?? 10,
-      sort: req.body.sort ?? "",
+      fields: (req.query.field as string) ?? "",
+      filter: (req.query.filter as any) ?? {},
+      page: Number(req.query.page ?? 1),
+      limit: Number(req.query.limit ?? 10),
+      sort: (req.query.sort as string) ?? "",
     };
 
     const result = await readManyUserService.handle(iQuery);
