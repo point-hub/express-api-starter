@@ -16,9 +16,6 @@ export abstract class BaseRepository {
   abstract create(doc: IDocument, options?: any): Promise<IResponseCreate>;
   abstract read(filter: any, options?: any): Promise<unknown>;
   abstract readMany(query: IQuery, options?: any): Promise<unknown>;
-  // abstract update(filter: any, document: IDocument, options?: any): Promise<unknown>;
-  // abstract updateMany(filter: any, document: IDocument, options?: any): Promise<unknown>;
-  // abstract delete(filter: any, options?: any): Promise<unknown>;
-  // abstract deleteMany(filter: any, options?: any): Promise<unknown>;
-  // abstract aggregate(filter: Array<IDocument>, options?: any): Promise<unknown>;
+  abstract update(filter: any, document: IDocument, options?: any): Promise<unknown>;
+  abstract delete(filter: any, options?: any): Promise<unknown>;
 }

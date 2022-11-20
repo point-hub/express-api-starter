@@ -18,15 +18,11 @@ export class UserRepository extends BaseRepository {
     return await this.collection().readMany(query);
   }
 
-  // public async update(filter: Filter<IDocument>, document: IDocument): Promise<unknown> {
-  //   return await this.collection.updateOne(filter, document);
-  // }
+  public async update(filter: any, document: IDocument, options: unknown): Promise<unknown> {
+    return await this.collection().update(filter, document, options);
+  }
 
-  // public async delete(filter: Filter<IDocument>): Promise<unknown> {
-  //   return await this.collection.deleteOne(filter);
-  // }
-
-  // public async aggregate(filter: Array<IDocument>): Promise<unknown> {
-  //   return await this.collection.aggregate(filter).toArray();
-  // }
+  public async delete(filter: any): Promise<unknown> {
+    return await this.collection().delete(filter);
+  }
 }

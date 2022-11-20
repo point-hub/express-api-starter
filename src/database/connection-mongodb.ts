@@ -1,25 +1,20 @@
 import {
   MongoClient,
   MongoClientOptions,
-  Filter,
   FindOptions,
   Collection,
   Db,
   InsertOneOptions,
-  BulkWriteOptions,
   UpdateOptions,
   DeleteOptions,
-  AggregateOptions,
   ClientSession,
   DbOptions,
   CollectionOptions,
-  SortDirection,
   ObjectId,
 } from "mongodb";
 import {
   IDatabaseAdapter,
   IDocument,
-  IFilter,
   IQuery,
   IResponseCreate,
   IResponseRead,
@@ -141,27 +136,21 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     };
   }
 
-  // public async update(filter: Filter<Document>, document: IDocument, options?: UpdateOptions): Promise<unknown> {
-  //   return await this.collection("a").updateOne(filter, document, options ?? {});
-  // }
+  public async update(filter: any, document: IDocument, options?: UpdateOptions): Promise<unknown> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
 
-  // public async updateMany(filter: Filter<Document>, document: IDocument, options?: UpdateOptions): Promise<unknown> {
-  //   return await this.collection("a").updateMany(filter, document, options ?? {});
-  // }
+    return await this._collection.updateOne({ _id: new ObjectId(filter._id) }, { $set: document }, options ?? {});
+  }
 
-  // public async delete(filter: Filter<Document>, options?: DeleteOptions): Promise<unknown> {
-  //   return await this.collection("a").deleteOne(filter, options ?? {});
-  // }
+  public async delete(filter: any, options?: DeleteOptions): Promise<unknown> {
+    if (!this._collection) {
+      throw new Error("Collection not found");
+    }
 
-  // public async deleteMany(filter: Filter<Document>, options?: DeleteOptions): Promise<unknown> {
-  //   return await this.collection("a").deleteMany(filter, options ?? {});
-  // }
-
-  // public async aggregate(filter: Array<Document>, options?: AggregateOptions): Promise<unknown> {
-  //   return await this.collection("a")
-  //     .aggregate(filter, options ?? {})
-  //     .toArray();
-  // }
+    return await this._collection.deleteOne(filter, options ?? {});
+  }
 
   public startSession() {
     this.session = this.client.startSession();
