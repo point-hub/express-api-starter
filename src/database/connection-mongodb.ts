@@ -131,7 +131,7 @@ export default class MongoDbConnection implements IDatabaseAdapter {
       data: result as Array<IResponseRead>,
       page: page(query.page),
       totalDocument,
-      totalPage: Math.round(totalDocument / limit(query.limit)),
+      totalPage: Math.ceil(totalDocument / limit(query.limit)),
       totalPerPage: limit(query.limit),
     };
   }
