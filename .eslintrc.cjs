@@ -19,7 +19,7 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": ["error", { printWidth: 120 }],
-    // semi: ["warn", "never"],
+    "@typescript-eslint/no-explicit-any": "off",
     "import/order": [
       "error",
       {

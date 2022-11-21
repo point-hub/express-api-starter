@@ -2,7 +2,7 @@ export interface IWarehouse {
   name: string;
   address: string;
   phone: string;
-  archived: boolean;
+  archived?: boolean;
 }
 
 export const restricted = [];

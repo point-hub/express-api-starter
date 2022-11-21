@@ -9,4 +9,6 @@ router.post("/", controller.create);
 router.patch("/:id", controller.update);
 router.delete("/:id", controller.destroy);
 
+router.post("/signin", controller.signin);
+
 export default router;

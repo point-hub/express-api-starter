@@ -37,7 +37,7 @@ export interface IDatabaseAdapter {
   create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
   read(id: string, options?: unknown): Promise<IResponseRead>;
   readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
-  update(filter: unknown, doc: IDocument): Promise<unknown>;
+  update(filter: unknown, doc: IDocument, options?: unknown): Promise<unknown>;
   delete(filter: unknown): Promise<unknown>;
 }
 
@@ -125,8 +125,8 @@ export default class DatabaseConnection {
     return await this.adapter.readMany(query, options);
   }
 
-  public async update(filter: unknown, document: IDocument): Promise<unknown> {
-    return await this.adapter.update(filter, document);
+  public async update(filter: unknown, document: IDocument, options?: unknown): Promise<unknown> {
+    return await this.adapter.update(filter, document, options);
   }
 
   public async delete(filter: unknown): Promise<unknown> {

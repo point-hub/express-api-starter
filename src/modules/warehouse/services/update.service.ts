@@ -10,9 +10,8 @@ export class UpdateWarehouseService {
   public async handle(filter: any, doc: IDocument, session: unknown) {
     const warehouseEntity = new WarehouseEntity({
       name: doc.name,
-      password: doc.password,
-      email: doc.email,
-      fullName: doc.fullName,
+      address: doc.address,
+      phone: doc.phone,
     });
 
     const warehouseRepository = new WarehouseRepository(this.db);
