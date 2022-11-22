@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import authRouter from "./modules/auth/router.js";
 import customerRouter from "./modules/customer/router.js";
 import expeditionRouter from "./modules/expedition/router.js";
 import itemRouter from "./modules/item/router.js";
@@ -14,6 +15,7 @@ export default async function () {
    */
   app.use(`/role`, roleRouter);
   app.use(`/user`, userRouter);
+  app.use(`/auth`, authRouter);
   app.use(`/warehouse`, warehouseRouter);
   app.use(`/customer`, customerRouter);
   app.use(`/expedition`, expeditionRouter);

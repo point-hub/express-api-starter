@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@point-hub/express-cli": "^0.2.2",
-    "@point-hub/express-error-handler": "^0.0.1",
+    "@point-hub/express-error-handler": "^0.0.2",
     "@point-hub/express-utils": "^0.0.14",
     "@point-hub/papi": "^0.0.1",
     "argon2": "^0.30.2",
