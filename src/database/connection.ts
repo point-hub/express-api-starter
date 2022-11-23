@@ -53,10 +53,12 @@ export interface IResponseRead {
 
 export interface IResponseReadMany {
   data: Array<IResponseRead>;
-  page: number;
-  totalDocument: number;
-  totalPage: number;
-  totalPerPage: number;
+  pagination: {
+    page: number;
+    totalDocument: number;
+    totalPage: number;
+    totalPerPage: number;
+  };
 }
 
 export default class DatabaseConnection {

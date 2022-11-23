@@ -17,7 +17,10 @@ export const readMany = async (req: Request, res: Response, next: NextFunction) 
 
     const result = await readManyRoleService.handle(iQuery);
 
-    res.status(200).json(result);
+    res.status(200).json({
+      roles: result.data,
+      pagination: result.pagination,
+    });
   } catch (error) {
     next(error);
   }
