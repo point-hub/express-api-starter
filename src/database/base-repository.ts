@@ -1,4 +1,17 @@
-import DatabaseConnection, { IDocument, IQuery, IResponseCreate } from "./connection.js";
+import DatabaseConnection, {
+  DocumentInterface,
+  QueryInterface,
+  CreateResultInterface,
+  ReadResultInterface,
+  ReadManyResultInterface,
+  UpdateResultInterface,
+  DeleteResultInterface,
+  CreateOptionsInterface,
+  ReadOptionsInterface,
+  ReadManyOptionsInterface,
+  UpdateOptionsInterface,
+  DeleteOptionsInterface,
+} from "./connection.js";
 
 export abstract class BaseRepository {
   public db: DatabaseConnection;
@@ -13,9 +26,13 @@ export abstract class BaseRepository {
     return this.db.collection(this.name);
   }
 
-  abstract create(doc: IDocument, options?: any): Promise<IResponseCreate>;
-  abstract read(filter: any, options?: any): Promise<unknown>;
-  abstract readMany(query: IQuery, options?: any): Promise<unknown>;
-  abstract update(filter: any, document: IDocument, options?: any): Promise<unknown>;
-  abstract delete(filter: any, options?: any): Promise<unknown>;
+  abstract create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface>;
+  abstract read(filter: any, options?: ReadOptionsInterface): Promise<ReadResultInterface>;
+  abstract readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface>;
+  abstract update(
+    filter: any,
+    document: DocumentInterface,
+    options?: UpdateOptionsInterface
+  ): Promise<UpdateResultInterface>;
+  abstract delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface>;
 }

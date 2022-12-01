@@ -1,5 +1,5 @@
 import { ExpeditionRepository } from "../repositories/expedition.repository.js";
-import DatabaseConnection, { IFilter } from "@src/database/connection.js";
+import DatabaseConnection, { FilterInterface } from "@src/database/connection.js";
 
 export class ReadExpeditionService {
   private db: DatabaseConnection;

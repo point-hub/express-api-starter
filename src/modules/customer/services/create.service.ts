@@ -1,13 +1,13 @@
 import { CustomerEntity } from "../entities/customer.entity.js";
 import { CustomerRepository } from "../repositories/customer.repository.js";
-import DatabaseConnection, { IDocument } from "@src/database/connection.js";
+import DatabaseConnection, { DocumentInterface } from "@src/database/connection.js";
 
 export class CreateCustomerService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
-  public async handle(doc: IDocument, session: unknown) {
+  public async handle(doc: DocumentInterface, session: unknown) {
     const customerEntity = new CustomerEntity({
       name: doc.name,
       address: doc.address,

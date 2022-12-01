@@ -1,5 +1,5 @@
 import { CustomerRepository } from "../repositories/customer.repository.js";
-import DatabaseConnection, { IFilter } from "@src/database/connection.js";
+import DatabaseConnection, { FilterInterface } from "@src/database/connection.js";
 
 export class ReadCustomerService {
   private db: DatabaseConnection;

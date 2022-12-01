@@ -2,17 +2,15 @@ import { RoleEntity } from "../entities/role.entity.js";
 import { RoleRepository } from "../repositories/role.repository.js";
 import DatabaseConnection, { DocumentInterface } from "@src/database/connection.js";
 
-export class UpdateRoleService {
+export class DestroyRoleService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
-  public async handle(filter: any, doc: DocumentInterface, session: unknown) {
-    const roleEntity = new RoleEntity({
-      name: doc.name,
-    });
-
+  public async handle(id: string, session: unknown) {
     const roleRepository = new RoleRepository(this.db);
-    return await roleRepository.update(filter, roleEntity.role, { session });
+    const response = await roleRepository.delete(id, session);
+    console.log(response);
+    return;
   }
 }

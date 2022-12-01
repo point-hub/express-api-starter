@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { ReadManyUserService } from "../services/read-many.service.js";
-import { IQuery } from "@src/database/connection.js";
+import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
 
 export const readMany = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const readManyUserService = new ReadManyUserService(db);
 
-    const iQuery: IQuery = {
+    const query: QueryInterface = {
       fields: (req.query.field as string) ?? "",
       filter: (req.query.filter as any) ?? {},
       page: Number(req.query.page ?? 1),
@@ -15,7 +15,7 @@ export const readMany = async (req: Request, res: Response, next: NextFunction) 
       sort: (req.query.sort as string) ?? "",
     };
 
-    const result = await readManyUserService.handle(iQuery);
+    const result = await readManyUserService.handle(query);
 
     res.status(200).json(result);
   } catch (error) {

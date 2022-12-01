@@ -9,7 +9,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     db.startTransaction();
 
     const createUserService = new CreateUserService(db);
-    const result = await createUserService.handle(req.body, session);
+    const result = await createUserService.handle(req.body, { session });
 
     await db.commitTransaction();
 

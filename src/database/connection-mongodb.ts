@@ -14,11 +14,18 @@ import {
 } from "mongodb";
 import {
   IDatabaseAdapter,
-  IDocument,
-  IQuery,
-  IResponseCreate,
-  IResponseRead,
-  IResponseReadMany,
+  DocumentInterface,
+  QueryInterface,
+  DeleteResultInterface,
+  UpdateResultInterface,
+  ReadManyResultInterface,
+  ReadResultInterface,
+  CreateResultInterface,
+  CreateOptionsInterface,
+  ReadOptionsInterface,
+  ReadManyOptionsInterface,
+  UpdateOptionsInterface,
+  DeleteOptionsInterface,
 } from "./connection.js";
 import { fields, limit, page, skip, sort } from "./mongodb-util.js";
 
@@ -76,42 +83,50 @@ export default class MongoDbConnection implements IDatabaseAdapter {
     return this;
   }
 
-  public async create(doc: IDocument, options?: InsertOneOptions): Promise<IResponseCreate> {
+  public async create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
 
-    const response = await this._collection.insertOne(doc, options ?? {});
+    const insertOneOptions = options as InsertOneOptions;
+
+    const response = await this._collection.insertOne(doc, insertOneOptions);
 
     return {
+      acknowledged: response.acknowledged,
       _id: response.insertedId.toString(),
     };
   }
 
-  public async read(id: string, options?: FindOptions): Promise<IResponseRead> {
+  public async read(id: string, options?: ReadOptionsInterface): Promise<ReadResultInterface> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
+
+    const readOptions = options as FindOptions;
 
     const result = await this._collection.findOne(
       {
         _id: new ObjectId(id),
       },
-      options ?? {}
+      readOptions
     );
 
     return {
+      _id: new ObjectId(result?._id.toString()),
       ...result,
     };
   }
 
-  public async readMany(query: IQuery, options?: FindOptions): Promise<IResponseReadMany> {
+  public async readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
 
+    const readOptions = options as FindOptions;
+
     const cursor = this._collection
-      .find(query.filter ?? {}, options ?? {})
+      .find(query.filter ?? {}, readOptions)
       .limit(limit(query.limit))
       .skip(skip(page(query.page), limit(query.limit)));
 
@@ -125,31 +140,59 @@ export default class MongoDbConnection implements IDatabaseAdapter {
 
     const result = await cursor.toArray();
 
-    const totalDocument = await this._collection.countDocuments(query.filter ?? {}, options ?? {});
+    const totalDocument = await this._collection.countDocuments(query.filter ?? {}, readOptions);
 
     return {
-      data: result as Array<IResponseRead>,
-      page: page(query.page),
-      totalDocument,
-      totalPage: Math.ceil(totalDocument / limit(query.limit)),
-      totalPerPage: limit(query.limit),
+      data: result as Array<ReadResultInterface>,
+      pagination: {
+        page: page(query.page),
+        totalDocument,
+        totalPage: Math.ceil(totalDocument / limit(query.limit)),
+        totalPerPage: limit(query.limit),
+      },
     };
   }
 
-  public async update(filter: any, document: IDocument, options?: UpdateOptions): Promise<unknown> {
+  public async update(
+    id: string,
+    document: DocumentInterface,
+    options?: UpdateOptionsInterface
+  ): Promise<UpdateResultInterface> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
 
-    return await this._collection.updateOne({ _id: new ObjectId(filter._id) }, { $set: document }, options ?? {});
+    const updateOptions = options as UpdateOptions;
+
+    const result = await this._collection.updateOne({ _id: new ObjectId(id) }, { $set: document }, updateOptions);
+
+    return {
+      acknowledged: result.acknowledged,
+      modifiedCount: result.modifiedCount,
+      upsertedId: result.upsertedId,
+      upsertedCount: result.upsertedCount,
+      matchedCount: result.matchedCount,
+    };
   }
 
-  public async delete(filter: any, options?: DeleteOptions): Promise<unknown> {
+  public async delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface> {
     if (!this._collection) {
       throw new Error("Collection not found");
     }
 
-    return await this._collection.deleteOne(filter, options ?? {});
+    const deleteOptions = options as DeleteOptions;
+
+    const result = await this._collection.deleteOne(
+      {
+        _id: new ObjectId(id),
+      },
+      deleteOptions
+    );
+
+    return {
+      acknowledged: result.acknowledged,
+      deletedCount: result.deletedCount,
+    };
   }
 
   public startSession() {

@@ -9,7 +9,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
     db.startTransaction();
 
     const updateUserService = new UpdateUserService(db);
-    const result = await updateUserService.handle({ _id: req.params.id }, req.body, session);
+    const result = await updateUserService.handle(req.params.id, req.body, session);
 
     await db.commitTransaction();
 

@@ -9,11 +9,11 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
     db.startTransaction();
 
     const updateRoleService = new UpdateRoleService(db);
-    const result = await updateRoleService.handle({ _id: req.params.id }, req.body, session);
+    await updateRoleService.handle({ _id: req.params.id }, req.body, session);
 
     await db.commitTransaction();
 
-    res.status(200).json(result);
+    res.status(204).json();
   } catch (error) {
     await db.abortTransaction();
     next(error);

@@ -1,5 +1,5 @@
 import { WarehouseRepository } from "../repositories/warehouse.repository.js";
-import DatabaseConnection, { IFilter } from "@src/database/connection.js";
+import DatabaseConnection, { FilterInterface } from "@src/database/connection.js";
 
 export class ReadWarehouseService {
   private db: DatabaseConnection;

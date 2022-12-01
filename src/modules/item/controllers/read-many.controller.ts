@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { ReadManyItemService } from "../services/read-many.service.js";
-import { IQuery } from "@src/database/connection.js";
+import { QueryInterface } from "@src/database/connection.js";
 import { db } from "@src/database/database.js";
 
 export const readMany = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const readManyItemService = new ReadManyItemService(db);
 
-    const iQuery: IQuery = {
+    const iQuery: QueryInterface = {
       fields: (req.query.field as string) ?? "",
       filter: (req.query.filter as any) ?? {},
       page: Number(req.query.page ?? 1),

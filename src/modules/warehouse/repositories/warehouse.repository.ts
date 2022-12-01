@@ -1,28 +1,45 @@
 import { BaseRepository } from "@src/database/base-repository.js";
-import DatabaseConnection, { IDocument, IQuery, IResponseCreate } from "@src/database/connection.js";
+import DatabaseConnection, {
+  CreateOptionsInterface,
+  DeleteOptionsInterface,
+  DocumentInterface,
+  QueryInterface,
+  ReadManyOptionsInterface,
+  ReadOptionsInterface,
+  UpdateOptionsInterface,
+  CreateResultInterface,
+  ReadResultInterface,
+  ReadManyResultInterface,
+  UpdateResultInterface,
+  DeleteResultInterface,
+} from "@src/database/connection.js";
 
 export class WarehouseRepository extends BaseRepository {
   constructor(db: DatabaseConnection) {
     super(db, "warehouse");
   }
 
-  public async create(doc: IDocument, options: unknown): Promise<IResponseCreate> {
+  public async create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface> {
     return await this.collection().create(doc, options);
   }
 
-  public async read(id: string, options?: unknown): Promise<unknown> {
+  public async read(id: string, options?: ReadOptionsInterface): Promise<ReadResultInterface> {
     return await this.collection().read(id, options);
   }
 
-  public async readMany(query: IQuery): Promise<unknown> {
-    return await this.collection().readMany(query);
+  public async readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface> {
+    return await this.collection().readMany(query, options);
   }
 
-  public async update(filter: any, document: IDocument, options: unknown): Promise<unknown> {
-    return await this.collection().update(filter, document, options);
+  public async update(
+    id: string,
+    document: DocumentInterface,
+    options?: UpdateOptionsInterface
+  ): Promise<UpdateResultInterface> {
+    return await this.collection().update(id, document, options);
   }
 
-  public async delete(filter: any): Promise<unknown> {
-    return await this.collection().delete(filter);
+  public async delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface> {
+    return await this.collection().delete(id, options);
   }
 }

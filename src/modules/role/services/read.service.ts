@@ -1,5 +1,6 @@
+import { RoleEntity, RoleInterface } from "../entities/role.entity.js";
 import { RoleRepository } from "../repositories/role.repository.js";
-import DatabaseConnection, { IFilter } from "@src/database/connection.js";
+import DatabaseConnection from "@src/database/connection.js";
 
 export class ReadRoleService {
   private db: DatabaseConnection;
@@ -8,6 +9,14 @@ export class ReadRoleService {
   }
   public async handle(id: string) {
     const roleRepository = new RoleRepository(this.db);
-    return await roleRepository.read(id);
+    const result = (await roleRepository.read(id)) as unknown as RoleInterface;
+
+    const role: RoleInterface = {
+      _id: result._id as string,
+      name: result.name as string,
+    };
+    const roleEntity = new RoleEntity(role);
+
+    return roleEntity.role;
   }
 }

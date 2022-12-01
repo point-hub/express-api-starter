@@ -1,6 +1,6 @@
 import { UserRepository } from "../repositories/user.repository.js";
 import { issuer, secretKey } from "@src/config/auth.js";
-import DatabaseConnection, { IQuery } from "@src/database/connection.js";
+import DatabaseConnection, { QueryInterface } from "@src/database/connection.js";
 import { verify } from "@src/utils/hash.js";
 import { signNewToken } from "@src/utils/jwt.js";
 
@@ -10,7 +10,7 @@ export class SigninUserService {
     this.db = db;
   }
   public async handle(username: string, password: string) {
-    const iQuery: IQuery = {
+    const iQuery: QueryInterface = {
       fields: "",
       filter: { username: username },
       page: 1,

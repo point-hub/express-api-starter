@@ -1,25 +1,74 @@
 import { ObjectId } from "mongodb";
 
-export interface IDocument {
+export interface DocumentInterface {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
-export interface IFilter {
+export interface FilterInterface {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
-export interface IQuery {
+export interface QueryInterface {
   fields: string;
-  filter: IFilter;
+  filter: FilterInterface;
   page: number;
   limit: number;
   sort: string;
 }
 
-export interface IOptions {
+export interface CreateOptionsInterface {
   session: unknown;
+}
+
+export interface ReadOptionsInterface {
+  session: unknown;
+}
+
+export interface ReadManyOptionsInterface {
+  session: unknown;
+}
+
+export interface UpdateOptionsInterface {
+  session: unknown;
+}
+
+export interface DeleteOptionsInterface {
+  session: unknown;
+}
+
+export interface CreateResultInterface {
+  _id: string;
+  acknowledged: boolean;
+}
+
+export interface ReadResultInterface {
+  _id: ObjectId;
+  [key: string]: unknown;
+}
+
+export interface ReadManyResultInterface {
+  data: Array<ReadResultInterface>;
+  pagination: {
+    page: number;
+    totalDocument: number;
+    totalPage: number;
+    totalPerPage: number;
+  };
+}
+
+export interface UpdateResultInterface {
+  acknowledged: boolean;
+  modifiedCount: number;
+  upsertedId: ObjectId | string | null;
+  upsertedCount: number;
+  matchedCount: number;
+}
+
+export interface DeleteResultInterface {
+  acknowledged: boolean;
+  deletedCount: number;
 }
 
 export interface IDatabaseAdapter {
@@ -34,31 +83,11 @@ export interface IDatabaseAdapter {
   startTransaction(): this;
   commitTransaction(): Promise<this>;
   abortTransaction(): Promise<this>;
-  create(doc: IDocument, options?: unknown): Promise<IResponseCreate>;
-  read(id: string, options?: unknown): Promise<IResponseRead>;
-  readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany>;
-  update(filter: unknown, doc: IDocument, options?: unknown): Promise<unknown>;
-  delete(filter: unknown): Promise<unknown>;
-}
-
-export interface IResponseCreate {
-  _id: string;
-  [key: string]: unknown;
-}
-
-export interface IResponseRead {
-  _id?: ObjectId;
-  [key: string]: unknown;
-}
-
-export interface IResponseReadMany {
-  data: Array<IResponseRead>;
-  pagination: {
-    page: number;
-    totalDocument: number;
-    totalPage: number;
-    totalPerPage: number;
-  };
+  create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface>;
+  read(id: string, options?: ReadOptionsInterface): Promise<ReadResultInterface>;
+  readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface>;
+  update(id: string, doc: DocumentInterface, options?: UpdateOptionsInterface): Promise<UpdateResultInterface>;
+  delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface>;
 }
 
 export default class DatabaseConnection {
@@ -115,23 +144,27 @@ export default class DatabaseConnection {
     return this;
   }
 
-  public async create(doc: IDocument, options?: unknown): Promise<IResponseCreate> {
+  public async create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface> {
     return await this.adapter.create(doc, options);
   }
 
-  public async read(id: string, options: unknown): Promise<IResponseRead> {
+  public async read(id: string, options?: ReadOptionsInterface): Promise<ReadResultInterface> {
     return await this.adapter.read(id, options);
   }
 
-  public async readMany(query: IQuery, options?: unknown): Promise<IResponseReadMany> {
+  public async readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface> {
     return await this.adapter.readMany(query, options);
   }
 
-  public async update(filter: unknown, document: IDocument, options?: unknown): Promise<unknown> {
-    return await this.adapter.update(filter, document, options);
+  public async update(
+    id: string,
+    document: DocumentInterface,
+    options?: UpdateOptionsInterface
+  ): Promise<UpdateResultInterface> {
+    return await this.adapter.update(id, document, options);
   }
 
-  public async delete(filter: unknown): Promise<unknown> {
-    return await this.adapter.delete(filter);
+  public async delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface> {
+    return await this.adapter.delete(id, options);
   }
 }

@@ -1,9 +1,8 @@
 import { ApiError } from "@point-hub/express-error-handler";
 import { UserRepository } from "../repositories/user.repository.js";
-import { issuer, secretKey } from "@src/config/auth.js";
-import DatabaseConnection, { IQuery } from "@src/database/connection.js";
-import { verify } from "@src/utils/hash.js";
-import { signNewToken, verifyToken } from "@src/utils/jwt.js";
+import { secretKey } from "@src/config/auth.js";
+import DatabaseConnection from "@src/database/connection.js";
+import { verifyToken } from "@src/utils/jwt.js";
 export class VerifyTokenUserService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {

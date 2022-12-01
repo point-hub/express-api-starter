@@ -1,13 +1,13 @@
 import { ItemEntity } from "../entities/item.entity.js";
 import { ItemRepository } from "../repositories/item.repository.js";
-import DatabaseConnection, { IDocument } from "@src/database/connection.js";
+import DatabaseConnection, { DocumentInterface } from "@src/database/connection.js";
 
 export class CreateItemService {
   private db: DatabaseConnection;
   constructor(db: DatabaseConnection) {
     this.db = db;
   }
-  public async handle(doc: IDocument, session: unknown) {
+  public async handle(doc: DocumentInterface, session: unknown) {
     const itemEntity = new ItemEntity({
       name: doc.name,
       address: doc.address,
