@@ -1,4 +1,4 @@
-import { Filter, SortDirection } from "mongodb";
+import { SortDirection } from "mongodb";
 
 interface IFieldsObject {
   [key: string]: number;

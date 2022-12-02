@@ -23,7 +23,7 @@ export class SigninUserService {
     const result = (await userRepository.readMany(iQuery)) as any;
 
     let isVerified = false;
-    if (result.totalDocument === 1) {
+    if (result.pagination.totalDocument === 1) {
       isVerified = await verify(result.data[0].password, password);
     }
 

@@ -19,7 +19,7 @@ export class SigninUserService {
     };
     const userRepository = new UserRepository(this.db);
     const result = (await userRepository.readMany(iQuery)) as any;
-
+    console.log(result);
     let isVerified = false;
     if (result.totalDocument === 1) {
       isVerified = await verify(result.data[0].password, password);

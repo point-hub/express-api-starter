@@ -9,7 +9,7 @@ export const destroy = async (req: Request, res: Response, next: NextFunction) =
     db.startTransaction();
 
     const destroyRoleService = new DestroyRoleService(db);
-    await destroyRoleService.handle(req.params.id, session);
+    await destroyRoleService.handle(req.params.id, { session });
 
     await db.commitTransaction();
 
