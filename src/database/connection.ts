@@ -158,10 +158,10 @@ export default class DatabaseConnection {
 
   public async update(
     id: string,
-    document: DocumentInterface,
+    doc: DocumentInterface,
     options?: UpdateOptionsInterface
   ): Promise<UpdateResultInterface> {
-    return await this.adapter.update(id, document, options);
+    return await this.adapter.update(id, doc, options);
   }
 
   public async delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface> {

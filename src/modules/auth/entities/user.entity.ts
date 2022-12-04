@@ -3,7 +3,6 @@ export interface IUser {
   password: string;
   email: string;
   fullName: string;
-  emailValidationCode?: string;
   status?: "registered" | "activated" | "suspended";
 }
 
@@ -16,15 +15,15 @@ export class UserEntity {
     this.user = user;
   }
 
-  public generateEmailValidationCode() {
-    this.user.emailValidationCode = "<random generated code>";
-  }
-
   public generateRandomPassword() {
     this.user.password = "<random generated password>";
   }
 
   public suspendUser() {
     this.user.status = "suspended";
+  }
+
+  public activateUser() {
+    this.user.status = "activated";
   }
 }

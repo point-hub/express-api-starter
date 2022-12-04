@@ -11,6 +11,7 @@ import DatabaseConnection, {
   ReadManyOptionsInterface,
   UpdateOptionsInterface,
   DeleteOptionsInterface,
+  FilterInterface,
 } from "./connection.js";
 
 export abstract class BaseRepository {
@@ -27,12 +28,8 @@ export abstract class BaseRepository {
   }
 
   abstract create(doc: DocumentInterface, options?: CreateOptionsInterface): Promise<CreateResultInterface>;
-  abstract read(filter: any, options?: ReadOptionsInterface): Promise<ReadResultInterface>;
+  abstract read(id: string, options?: ReadOptionsInterface): Promise<ReadResultInterface>;
   abstract readMany(query: QueryInterface, options?: ReadManyOptionsInterface): Promise<ReadManyResultInterface>;
-  abstract update(
-    filter: any,
-    document: DocumentInterface,
-    options?: UpdateOptionsInterface
-  ): Promise<UpdateResultInterface>;
+  abstract update(id: string, doc: DocumentInterface, options?: UpdateOptionsInterface): Promise<UpdateResultInterface>;
   abstract delete(id: string, options?: DeleteOptionsInterface): Promise<DeleteResultInterface>;
 }
