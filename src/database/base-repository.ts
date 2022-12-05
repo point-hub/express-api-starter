@@ -11,7 +11,6 @@ import DatabaseConnection, {
   ReadManyOptionsInterface,
   UpdateOptionsInterface,
   DeleteOptionsInterface,
-  FilterInterface,
 } from "./connection.js";
 
 export abstract class BaseRepository {

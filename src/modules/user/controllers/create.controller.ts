@@ -8,6 +8,8 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
     db.startTransaction();
 
+    // return res.status(422).json("a");
+
     const createUserService = new CreateUserService(db);
     const result = await createUserService.handle(req.body, { session });
 
